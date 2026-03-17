@@ -1,0 +1,3206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nautilus Documentation</title>
+  <meta name="description" content="Complete reference documentation for the Nautilus self-service Azure IaC platform." />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11/styles/github-dark-dimmed.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal:      #00c4cc;
+      --teal-dim:  #008c94;
+      --teal-dark: #00565c;
+      --bg:        #0b1219;
+      --bg2:       #111c26;
+      --bg3:       #172333;
+      --border:    #1e3040;
+      --text:      #c9d8e3;
+      --muted:     #6b8899;
+      --white:     #eef4f8;
+      --green:     #3dd68c;
+      --yellow:    #e8b93c;
+      --radius:    8px;
+      --sidebar-w: 280px;
+      --nav-h:     56px;
+      --font:      -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --mono:      "SF Mono", "Fira Code", "Cascadia Code", Consolas, monospace;
+    }
+
+    html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + 1.5rem); }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--teal); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Top nav ── */
+    .topnav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      height: var(--nav-h); padding: 0 1.5rem;
+      background: rgba(11, 18, 25, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .topnav-brand {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-weight: 700; font-size: 1rem; color: var(--white);
+      text-decoration: none;
+    }
+    .topnav-brand:hover { text-decoration: none; }
+
+    .topnav-links { display: flex; gap: 1.25rem; list-style: none; font-size: 0.85rem; }
+    .topnav-links a { color: var(--muted); }
+    .topnav-links a:hover { color: var(--white); text-decoration: none; }
+    .topnav-links a.active { color: var(--teal); }
+
+    .menu-toggle {
+      display: none; background: none; border: 1px solid var(--border);
+      color: var(--text); padding: 0.3rem 0.6rem; border-radius: 4px;
+      font-size: 1.1rem; cursor: pointer;
+    }
+
+    /* ── Layout ── */
+    .layout {
+      display: flex;
+      margin-top: var(--nav-h);
+      min-height: calc(100vh - var(--nav-h));
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      position: fixed; top: var(--nav-h); left: 0; bottom: 0;
+      width: var(--sidebar-w);
+      background: var(--bg2);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      padding: 1.25rem 0;
+      z-index: 100;
+    }
+
+    .sidebar-section {
+      padding: 0 1.25rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .sidebar-heading {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--muted);
+      padding: 0.75rem 0 0.4rem;
+    }
+
+    .sidebar a {
+      display: block; padding: 0.35rem 1.25rem;
+      font-size: 0.88rem; color: var(--text);
+      border-left: 2px solid transparent;
+      transition: all 0.12s;
+    }
+    .sidebar a:hover {
+      color: var(--white); background: rgba(0,196,204,0.05);
+      text-decoration: none;
+    }
+    .sidebar a.active {
+      color: var(--teal); border-left-color: var(--teal);
+      background: rgba(0,196,204,0.08);
+    }
+
+    /* ── Content ── */
+    .content {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      max-width: 820px;
+      padding: 2.5rem 3rem 4rem;
+    }
+
+    /* ── Markdown rendered styles ── */
+    .content h1 {
+      font-size: 2rem; font-weight: 800; color: var(--white);
+      margin: 0 0 0.75rem; letter-spacing: -0.02em;
+      padding-bottom: 0.75rem; border-bottom: 1px solid var(--border);
+    }
+
+    .content h2 {
+      font-size: 1.4rem; font-weight: 700; color: var(--white);
+      margin: 2.5rem 0 0.75rem; letter-spacing: -0.01em;
+      padding-bottom: 0.5rem; border-bottom: 1px solid var(--border);
+    }
+
+    .content h3 {
+      font-size: 1.1rem; font-weight: 600; color: var(--white);
+      margin: 2rem 0 0.5rem;
+    }
+
+    .content h4 {
+      font-size: 0.95rem; font-weight: 600; color: var(--white);
+      margin: 1.5rem 0 0.4rem;
+    }
+
+    .content p { margin: 0 0 1rem; }
+
+    .content ul, .content ol {
+      margin: 0 0 1rem; padding-left: 1.5rem;
+    }
+    .content li { margin-bottom: 0.3rem; }
+    .content li > ul, .content li > ol { margin-top: 0.3rem; margin-bottom: 0; }
+
+    .content strong { color: var(--white); }
+
+    .content code {
+      font-family: var(--mono); font-size: 0.85em;
+      background: var(--bg3); padding: 0.15em 0.4em;
+      border-radius: 4px; color: var(--teal);
+    }
+
+    .content pre {
+      margin: 0 0 1.25rem;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow-x: auto;
+      padding: 1rem 1.25rem;
+      line-height: 1.55;
+    }
+    .content pre code {
+      background: none; padding: 0; color: var(--text);
+      font-size: 0.82rem;
+    }
+
+    .content blockquote {
+      margin: 0 0 1rem;
+      padding: 0.75rem 1rem;
+      border-left: 3px solid var(--teal-dark);
+      background: rgba(0,196,204,0.05);
+      border-radius: 0 var(--radius) var(--radius) 0;
+    }
+    .content blockquote p:last-child { margin-bottom: 0; }
+
+    .content table {
+      width: 100%; margin: 0 0 1.25rem;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+    .content th {
+      text-align: left; font-weight: 600; color: var(--white);
+      padding: 0.6rem 0.75rem;
+      background: var(--bg3);
+      border-bottom: 2px solid var(--border);
+    }
+    .content td {
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .content tr:hover td { background: rgba(0,196,204,0.03); }
+
+    .content hr {
+      border: none; border-top: 1px solid var(--border);
+      margin: 2rem 0;
+    }
+
+    .content img { max-width: 100%; border-radius: var(--radius); }
+
+    /* ── Responsive ── */
+    /* ── See it in action — horizontal slider ── */
+    .demo-slider {
+      margin: 2rem 0 2.5rem;
+      position: relative;
+    }
+
+    .demo-slider h2 {
+      border-bottom: none !important;
+      padding-bottom: 0 !important;
+      margin-bottom: 1.25rem !important;
+    }
+
+    .demo-track-wrap {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--bg2);
+    }
+
+    .demo-track {
+      display: flex;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: transform;
+    }
+
+    .demo-step {
+      min-width: 100%;
+      padding: 2rem 2.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .demo-step-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .demo-step-num {
+      flex-shrink: 0;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--teal);
+      color: var(--teal);
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .demo-step-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .demo-step-sub {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .demo-code {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow-x: auto;
+      position: relative;
+    }
+
+    .demo-code-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 0.85rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(23, 35, 51, 0.6);
+    }
+
+    .demo-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+    }
+
+    .demo-code-file {
+      margin-left: auto;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .demo-code pre {
+      margin: 0 !important;
+      border: none !important;
+      background: transparent !important;
+      padding: 1rem 1.25rem !important;
+      font-size: 0.8rem !important;
+      line-height: 1.7 !important;
+    }
+
+    .demo-code pre code {
+      background: none !important;
+      padding: 0 !important;
+    }
+
+    /* Navigation */
+    .demo-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.85rem 1rem;
+      border-top: 1px solid var(--border);
+      background: rgba(17, 28, 38, 0.5);
+    }
+
+    .demo-dots {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .demo-dot-nav {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.2s;
+    }
+    .demo-dot-nav.active { background: var(--teal); }
+
+    .demo-btns {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .demo-btn {
+      padding: 0.3rem 0.9rem;
+      border-radius: 5px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .demo-btn:hover { border-color: var(--teal-dim); color: var(--white); }
+    .demo-btn:disabled { opacity: 0.3; cursor: default; }
+    .demo-btn.primary { background: var(--teal); color: #000; border-color: var(--teal); font-weight: 600; }
+    .demo-btn.primary:hover { opacity: 0.88; }
+
+    .demo-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .demo-arrow:hover { border-color: var(--teal); color: var(--teal); }
+
+    @media (max-width: 900px) {
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.2s;
+        width: 280px;
+      }
+      .sidebar.open { transform: translateX(0); }
+      .content { margin-left: 0; padding: 2rem 1.5rem 3rem; }
+      .menu-toggle { display: block; }
+      .demo-step { padding: 1.5rem 1.25rem; }
+      #demo-section { margin-left: 0 !important; padding: 0 1.5rem 2rem !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Top nav ── -->
+<nav class="topnav">
+  <div style="display:flex; align-items:center; gap:1rem;">
+    <button class="menu-toggle" onclick="toggleSidebar()" aria-label="Toggle menu">&#9776;</button>
+    <a class="topnav-brand" href="index.html">&#x1F41A; Nautilus</a>
+  </div>
+  <ul class="topnav-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="https://github.com/kicka5h/project-nautilus">GitHub</a></li>
+  </ul>
+</nav>
+
+<!-- ── Layout ── -->
+<div class="layout">
+
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Getting started</div>
+    </div>
+    <a href="#home" data-page="home">Home</a>
+    <a href="#demo" data-page="demo">See it in action</a>
+    <a href="#architecture-overview" data-page="architecture-overview">Architecture overview</a>
+    <a href="#bootstrap" data-page="bootstrap">Azure bootstrap</a>
+    <a href="#repository-setup" data-page="repository-setup">Repository setup</a>
+
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Product teams</div>
+    </div>
+    <a href="#developer-guide" data-page="developer-guide">Developer guide</a>
+
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Platform team</div>
+    </div>
+    <a href="#platform-module-maintenance" data-page="platform-module-maintenance">Module maintenance</a>
+    <a href="#platform-product-maintenance" data-page="platform-product-maintenance">Product team support</a>
+  </aside>
+
+  <!-- ── Content ── -->
+  <main class="content" id="content">
+    <div class="loading">Loading documentation...</div>
+  </main>
+
+  <!-- Demo slider — static HTML, toggled by JS -->
+  <div id="demo-section" style="display:none; margin-left:var(--sidebar-w); max-width:820px; padding:0 3rem 2.5rem;">
+    <div class="demo-slider">
+      <h2 style="border-bottom:none;padding-bottom:0;margin-bottom:1.25rem;">See it in action</h2>
+      <div class="demo-track-wrap">
+        <div class="demo-track" id="demo-track">
+
+          <div class="demo-step">
+            <div class="demo-step-header">
+              <div class="demo-step-num">1</div>
+              <div class="demo-step-title">Developer writes a stack</div>
+            </div>
+            <div class="demo-step-sub">A product team developer installs the construct library and writes infrastructure as code in their language of choice. No HCL required.</div>
+            <div class="demo-code">
+              <div class="demo-code-bar"><div class="demo-dot"></div><div class="demo-dot"></div><div class="demo-dot"></div><span class="demo-code-file">main.py</span></div>
+              <pre><code class="python">from nautilus_infra import BaseAzureStack
+from nautilus_infra.constructs import (
+    NetworkConstruct, DatabaseConstruct, SubnetConfig
+)
+
+class PortalStack(BaseAzureStack):
+    def __init__(self, scope, id):
+        super().__init__(scope, id,
+            project="portal",
+            environment="dev",
+            location="eastus",
+        )
+
+        net = NetworkConstruct(self, "network",
+            project="portal",
+            environment="dev",
+            resource_group="portal-dev-rg",
+            location="eastus",
+            address_space=["10.0.0.0/16"],
+            subnets={"app": SubnetConfig("10.0.1.0/24")},
+        )
+
+        DatabaseConstruct(self, "db",
+            project="portal",
+            environment="dev",
+            resource_group="portal-dev-rg",
+            location="eastus",
+            subnet_id=net.subnet_ids["app"],
+            dns_zone_id=net.dns_zone_ids["postgres"],
+            admin_password=os.environ["DB_PASSWORD"],
+        )</code></pre>
+            </div>
+          </div>
+
+          <div class="demo-step">
+            <div class="demo-step-header">
+              <div class="demo-step-num">2</div>
+              <div class="demo-step-title">PR triggers validation</div>
+            </div>
+            <div class="demo-step-sub">The developer opens a pull request. The reusable workflow pipeline kicks in automatically — formatting, validation, and change detection.</div>
+            <div class="demo-code">
+              <div class="demo-code-bar"><div class="demo-dot"></div><div class="demo-dot"></div><div class="demo-dot"></div><span class="demo-code-file">.github/workflows/infra.yml</span></div>
+              <pre><code class="yaml">name: Infrastructure
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    uses: nautilus/reusable-workflows/.github/workflows/tf-validate.yml@v1.4.0
+
+  changes:
+    if: github.event_name == 'pull_request'
+    uses: nautilus/reusable-workflows/.github/workflows/tf-changes.yml@v1.4.0
+
+  plan:
+    needs: [validate, changes]
+    if: github.event_name == 'pull_request'
+    uses: nautilus/reusable-workflows/.github/workflows/tf-plan.yml@v1.4.0
+    with:
+      environments: ${{ needs.changes.outputs.affected }}</code></pre>
+            </div>
+          </div>
+
+          <div class="demo-step">
+            <div class="demo-step-header">
+              <div class="demo-step-num">3</div>
+              <div class="demo-step-title">OPA policies gate the plan</div>
+            </div>
+            <div class="demo-step-sub">Every terraform plan is evaluated against the full OPA policy suite. Public resources, unauthorized network changes, missing tags — all blocked before apply.</div>
+            <div class="demo-code">
+              <div class="demo-code-bar"><div class="demo-dot"></div><div class="demo-dot"></div><div class="demo-dot"></div><span class="demo-code-file">policy/deny_public_resources.rego</span></div>
+              <pre><code class="text">package nautilus.deny
+
+import rego.v1
+
+deny contains msg if {
+    some resource in input.resource_changes
+    resource.change.after.public_network_access_enabled == true
+    msg := sprintf(
+        "Resource '%s' enables public network access. "
+        "All resources must use private endpoints.",
+        [resource.address]
+    )
+}
+
+deny contains msg if {
+    some resource in input.resource_changes
+    resource.type == "azurerm_public_ip"
+    msg := sprintf(
+        "Resource '%s' creates a public IP. "
+        "Public IPs are not allowed in any environment.",
+        [resource.address]
+    )
+}
+
+# ✓ Plan passed — 0 violations</code></pre>
+            </div>
+          </div>
+
+          <div class="demo-step">
+            <div class="demo-step-header">
+              <div class="demo-step-num">4</div>
+              <div class="demo-step-title">Plan posted to the PR</div>
+            </div>
+            <div class="demo-step-sub">The pipeline comments the full plan diff and policy results directly on the pull request. Reviewers see exactly what will change before approving.</div>
+            <div class="demo-code">
+              <div class="demo-code-bar"><div class="demo-dot"></div><div class="demo-dot"></div><div class="demo-dot"></div><span class="demo-code-file">PR comment</span></div>
+              <pre><code class="text">🐚 Nautilus Plan — portal / dev
+
+Terraform will perform the following actions:
+
+  # module.network.azurerm_virtual_network.this
+  + resource "azurerm_virtual_network" "this" {
+      + name                = "portal-dev-vnet"
+      + address_space       = ["10.0.0.0/16"]
+      + location            = "eastus"
+      + resource_group_name = "portal-dev-rg"
+      + tags = {
+          + "managed_by"  = "terraform"
+          + "project"     = "portal"
+          + "environment" = "dev"
+        }
+    }
+
+  # module.db.azurerm_postgresql_flexible_server.this
+  + resource "azurerm_postgresql_flexible_server" "this" {
+      + name    = "portal-dev-psql"
+      + sku     = "GP_Standard_D2s_v3"
+      + version = "15"
+    }
+
+Plan: 6 to add, 0 to change, 0 to destroy.
+OPA: ✓ All policies passed (6 rules evaluated)</code></pre>
+            </div>
+          </div>
+
+          <div class="demo-step">
+            <div class="demo-step-header">
+              <div class="demo-step-num">5</div>
+              <div class="demo-step-title">Merge triggers deploy</div>
+            </div>
+            <div class="demo-step-sub">After approval, the PR is merged. The deploy pipeline applies changes environment by environment — dev and QA automatically, stage and prod with platform team approval.</div>
+            <div class="demo-code">
+              <div class="demo-code-bar"><div class="demo-dot"></div><div class="demo-dot"></div><div class="demo-dot"></div><span class="demo-code-file">deploy pipeline</span></div>
+              <pre><code class="text">🐚 Nautilus Deploy — portal
+
+━━━ dev ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ✓ terraform plan    6 to add
+  ✓ OPA policy check  passed
+  ✓ terraform apply   6 added, 0 changed
+  ✓ artifact saved    plan-portal-dev-a3f8c21
+
+━━━ qa ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ✓ terraform plan    6 to add
+  ✓ OPA policy check  passed
+  ✓ terraform apply   6 added, 0 changed
+
+━━━ stage ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ⏳ waiting for approval ...
+     environment: stage
+     required reviewer: @platform-infra
+     wait timer: 10 minutes
+
+━━━ prod ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ○ blocked by: stage</code></pre>
+            </div>
+          </div>
+
+          <div class="demo-step">
+            <div class="demo-step-header">
+              <div class="demo-step-num">6</div>
+              <div class="demo-step-title">Resources protected in Azure</div>
+            </div>
+            <div class="demo-step-sub">Once applied, Azure Policy enforces constraints at the ARM API level and management locks prevent accidental deletion. Drift detection runs daily.</div>
+            <div class="demo-code">
+              <div class="demo-code-bar"><div class="demo-dot"></div><div class="demo-dot"></div><div class="demo-dot"></div><span class="demo-code-file">Azure portal</span></div>
+              <pre><code class="text">Resource Group: portal-dev-rg
+Location:       East US
+
+┌─────────────────────────────────────────────┐
+│ Resources                                   │
+├─────────────────────────────────────────────┤
+│ ✓ portal-dev-vnet          Virtual Network  │
+│ ✓ portal-dev-app-nsg       Network Security │
+│ ✓ portal-dev-app           Subnet           │
+│ ✓ portal-dev-psql          PostgreSQL       │
+│ ✓ portal-dev-dns           Private DNS Zone │
+│ ✓ portal-dev-vnet-link     DNS VNet Link    │
+├─────────────────────────────────────────────┤
+│ Management locks (staging + prod):          │
+│   🔒 CanNotDelete on all resources          │
+│                                             │
+│ Azure Policy:                               │
+│   ✓ deny-public-access        enforced      │
+│   ✓ deny-network-outside-dev  enforced      │
+│   ✓ require-tags              enforced      │
+│                                             │
+│ Drift detection:                            │
+│   🕐 Daily scan — next run in 14h           │
+│   Last result: ✓ No drift detected          │
+└─────────────────────────────────────────────┘</code></pre>
+            </div>
+          </div>
+
+        </div>
+        <div class="demo-nav">
+          <div class="demo-dots" id="demo-dots">
+            <button class="demo-dot-nav active" data-i="0"></button>
+            <button class="demo-dot-nav" data-i="1"></button>
+            <button class="demo-dot-nav" data-i="2"></button>
+            <button class="demo-dot-nav" data-i="3"></button>
+            <button class="demo-dot-nav" data-i="4"></button>
+            <button class="demo-dot-nav" data-i="5"></button>
+          </div>
+          <div class="demo-btns">
+            <button class="demo-btn" id="demo-prev" disabled>&#8592; Prev</button>
+            <button class="demo-btn primary" id="demo-next">Next &#8594;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked@15/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/highlight.js@11/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/highlight.js@11/languages/bash.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/highlight.js@11/languages/python.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/highlight.js@11/languages/typescript.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/highlight.js@11/languages/go.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/highlight.js@11/languages/java.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/highlight.js@11/languages/csharp.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/highlight.js@11/languages/json.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/highlight.js@11/languages/xml.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/highlight.js@11/languages/hcl.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/highlight.js@11/languages/yaml.min.js"></script>
+<script>
+  const PAGES = {
+  "home": `# Project Nautilus
+
+Nautilus is a self-service IaC platform for Azure. Platform teams adopt it to give product teams a safe, opinionated path to provisioning their own infrastructure — without exposing raw Terraform, state, or credentials to application developers.
+
+Product teams write a CDKTF stack in any of five languages (Python, TypeScript, C#, Java, Go). The platform team owns everything beneath that abstraction: the Terraform modules, construct libraries, CI/CD pipelines, OPA policies, Azure Policy governance, state backend, and service principals.
+
+This repository is the reference implementation. Fork it and adapt it to your organization.
+
+---
+
+## What problem this solves
+
+Product teams need infrastructure — and they need it when they need it, not weeks later after a ticketing process. Nautilus gives developers a self-service path to provision their own resources just-in-time, without waiting on the platform team for every change.
+
+The risk of self-service is drift, misconfiguration, and accidental destruction in production. Nautilus addresses this through layered enforcement: OPA policies gate every plan before apply, Azure Policy enforces constraints at the ARM API level, and management locks protect stateful resources from deletion outside a supervised process. Developers move fast inside a well-defined boundary; the platform team defines and maintains that boundary rather than manually approving every change.
+
+---
+
+## How the system works
+
+\`\`\`text
+Product team pushes a CDKTF stack change
+        │
+        │  pull request / push to main
+        ▼
+infra.yml  (thin calling workflow in the product repo — copied from tf-azure/)
+  │
+  ├── tf-validate   fmt-check + terraform validate              (every trigger)
+  ├── tf-changes    detect which env folders changed            (PR only)
+  ├── tf-plan       synthesize → plan → OPA check → PR comment  (affected envs, PR only)
+  └── tf-deploy     plan → OPA check → apply                   (push to main)
+        │               dev (auto) → qa (auto) → stage (approval) → prod (approval)
+        │
+        │  module source references via SSH deploy key
+        ▼
+tf-modules/  (private, platform-owned)
+  modules/networking, modules/database/postgres, modules/compute/aks
+        │
+        ▼
+Azure
+  Resources created under management locks (CanNotDelete, all non-dev)
+  Azure Policy: deny public resources, restrict network/RBAC in staging+prod
+  State: Azure Blob Storage → {project}/{environment}/terraform.tfstate
+\`\`\`
+
+Authentication is OIDC throughout — no static credentials are stored anywhere. Each product team gets a service principal scoped to their Azure subscription.
+
+---
+
+---
+
+## Quick start
+
+Run the interactive setup wizard — it handles repo creation, branch protection, team setup, code push, and optionally the Azure bootstrap in a single guided session:
+
+\`\`\`bash
+bash <(curl -fsSL https://raw.githubusercontent.com/nautilus/project-nautilus/main/setup/nautilus.sh)
+\`\`\`
+
+**Prerequisites:** \\\`gh\\\` CLI, \\\`jq\\\`, \\\`git\\\`. Terraform is optional (needed for Azure bootstrap).
+
+---
+
+## Prerequisites
+
+Before implementing Nautilus, your organization needs:
+
+**GitHub**
+- A GitHub organization with Actions enabled
+
+**Azure**
+- An Azure subscription per environment (dev, staging, prod) per product team, or a shared subscription with separate resource groups
+- A dedicated storage account (\\\`platformtfstate\\\`) for Terraform state, with a container per product team
+- Management group or subscription-level access to assign Azure Policy
+
+**Internal package registries**
+- One registry per construct language (PyPI, npm, NuGet, Maven, Go proxy), or a single Artifactory/Nexus instance with virtual repos for each ecosystem
+
+**Tooling (platform team machines)**
+- Terraform ≥ 1.7 (for \\\`mock_provider\\\` in \\\`.tftest.hcl\\\` tests)
+- OPA / conftest CLI (for running policy tests locally)
+- Azure CLI (\\\`az\\\`)
+
+---
+
+## Key design decisions
+
+**OPA policies run before apply, Azure Policy runs after.** The \\\`policy/\\\` directory holds conftest rules that gate \\\`terraform plan\\\` output inside the CI pipeline. Azure Policy is a backstop for out-of-band changes. Both layers are intentional.
+
+**Management locks prevent accidental deletion.** All non-dev resources carry a \\\`CanNotDelete\\\` lock. The deletion OPA policy and the lock together mean that removing a staging or prod resource requires two deliberate acts: a lock removal by the platform team and a policy-compliant plan merge.
+
+**No static credentials anywhere.** All Azure authentication uses OIDC workload identity federation. The GitHub Actions \\\`id-token: write\\\` permission is set on every workflow that talks to Azure.
+
+**Construct version = module version.** The construct libraries pin a specific \\\`?ref=\\\` tag on the module source URL. A construct library release and a module tag are always cut together, so the mapping is always unambiguous.
+
+---
+
+## What the platform team owns permanently
+
+| Area | Details |
+|------|---------|
+| Terraform modules (\\\`tf-modules/\\\`) | All changes, versioning, and breaking-change coordination |
+| Construct libraries (\\\`constructs/\\\`) | Publishing new versions; coordinating upgrades across product teams |
+| Reusable workflows (\\\`reusable-workflows/\\\`) | Pipeline template; pushing updates to every consuming repo |
+| OPA policies (\\\`policy/\\\`) | Adding rules; reviewing violations with product teams |
+| Azure Policy (\\\`tf-modules/governance/\\\`) | Definitions and assignments across all subscriptions |
+| State backend | Storage account, RBAC, and lock management |
+| Service principals | One per product team per environment; OIDC federated credentials |
+| Module SSH deploy keys | Read-only deploy keys on \\\`terraform-modules\\\`; one per product repo |
+| Incident response | Failed applies, state corruption, unexpected drift |
+| Production approval gate | Required reviewer on GitHub Environments |
+
+---
+
+## Documentation
+
+| Document | Audience |
+|----------|---------|
+| [Architecture overview](#architecture-overview) | Anyone wanting the full system picture |
+| [Azure bootstrap](#bootstrap) | Provisioning service principals and state backend |
+| [Repository setup](#repository-setup) | Configuring repos with branch protection, environments, and templates |
+| [Developer guide](#developer-guide) | Product team developers writing CDKTF stacks |
+| [Module maintenance](#platform-module-maintenance) | Platform engineers maintaining \\\`tf-modules/\\\` |
+| [Product team support](#platform-product-maintenance) | Platform engineers supporting product teams and handling incidents |
+`,
+  "architecture-overview": `# Architecture Overview
+
+## System layers
+
+\`\`\`
+┌─────────────────────────────────────────────────────────────────┐
+│  Product team                                                    │
+│  Writes a CDKTF stack in Python / TypeScript / C# / Java / Go  │
+│  using the platform-maintained construct library                │
+└─────────────────────────┬───────────────────────────────────────┘
+                           │  git push → pull request / merge
+                           ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  infra.yml  (thin calling workflow in each product repo)        │
+│  Delegates to nautilus/reusable-workflows:                         │
+│                                                                  │
+│  tf-validate  →  fmt-check + init -backend=false + validate     │
+│  tf-changes   →  detect which env folders changed (PR only)     │
+│  tf-plan      →  init + plan + OPA check + post PR comment      │
+│                  runs only for affected environments, parallel   │
+│  [gate job]   →  environment: stage / prod  (approval gate)     │
+│  tf-deploy    →  init + plan + OPA check + apply + artifact     │
+│                  dev → qa → stage → prod  (sequential)          │
+│  tf-drift     →  daily: plan -detailed-exitcode + open issue    │
+└─────────────────────────┬───────────────────────────────────────┘
+                           │  module source via SSH deploy key
+                           ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  terraform-modules  (nautilus/terraform-modules — private)         │
+│                                                                  │
+│  modules/networking          modules/database/postgres           │
+│  modules/compute/aks         governance/                        │
+│                                                                  │
+│  Enforces: naming conventions, required tags, security          │
+│  defaults, HA requirements, management locks in staging/prod    │
+└─────────────────────────┬───────────────────────────────────────┘
+                           │  provisions resources
+                           ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  Azure                                                           │
+│  Remote state: Blob Storage (platform-managed, one file per     │
+│    project+environment combination)                             │
+│  Resources: VNet, AKS, PostgreSQL, etc.                         │
+│  Azure Policy: deny public resources, restrict network/RBAC     │
+│    writes in staging and prod                                    │
+│  Management locks: CanNotDelete on all non-dev resources        │
+└─────────────────────────────────────────────────────────────────┘
+\`\`\`
+
+---
+
+## Responsibility split
+
+| Concern | Product team | Platform team |
+|---------|-------------|---------------|
+| Which resources to create | ✅ | |
+| Resource sizing (within approved SKU list) | ✅ | |
+| Environment-specific configuration (tfvars) | ✅ | |
+| Terraform module implementation | | ✅ |
+| Security and compliance policy | | ✅ |
+| Required resource tagging | | ✅ (injected automatically) |
+| Remote state backend | | ✅ |
+| Azure provider and OIDC credentials | | ✅ |
+| CI/CD pipeline template | | ✅ |
+| Construct libraries (all five languages) | | ✅ |
+| OPA/conftest policy rules (\`policy/\`) | | ✅ |
+| Azure Policy definitions and assignments | | ✅ |
+| Reusable GitHub Actions workflows | | ✅ |
+| Management lock removal for decommissions | | ✅ |
+| Running \`terraform apply\` | | ✅ (pipeline only) |
+
+Product teams are deliberately shielded from Terraform, state, and cloud-level
+access controls. The platform team owns every enforcement layer beneath the
+construct API.
+
+---
+
+## Enforcement layers
+
+Three independent layers enforce policy. Each catches violations at a different
+point, so no single bypass defeats all enforcement.
+
+| Layer | Where | When caught | Who sees it |
+|-------|-------|-------------|-------------|
+| OPA/conftest (\`policy/\`) | CI/CD pipeline | After \`terraform plan\`, before apply | Product team — PR annotation |
+| Azure Policy (\`tf-modules/governance/\`) | Azure ARM API | At \`terraform apply\` time | Product team — apply failure |
+| Management locks (inside each TF module) | Azure ARM API | When deletion is attempted | Anyone — portal / CLI / Terraform |
+
+### Rules enforced
+
+| Rule | Environments |
+|------|-------------|
+| No public IPs or \`public_network_access_enabled = true\` | All |
+| No \`allow_blob_public_access = true\` on storage accounts | All |
+| No creation of network resources (VNets, subnets, NSGs, DNS zones, private endpoints) | Staging, prod |
+| No RBAC changes (role assignments, role definitions, managed identities) | Staging, prod |
+| No resource deletion or replacement | Staging, prod |
+| VM and PostgreSQL SKUs must be on the platform-approved allowlist | All |
+| Required tags (\`managed_by\`, \`project\`, \`environment\`) must be present | All |
+
+Network infrastructure in staging and prod is centrally managed by the platform
+team. Product teams reference existing subnet and DNS zone IDs via stack inputs —
+they do not provision network resources there.
+
+---
+
+## Authentication
+
+All Azure authentication uses OIDC (workload identity federation). No static
+credentials are stored in GitHub secrets.
+
+\`\`\`
+GitHub Actions runner
+│
+├── OIDC token  (id-token: write permission on the workflow)
+│   → exchanged with Azure AD for a short-lived access token
+│   → authenticates the Terraform AzureRM provider via ARM_USE_OIDC=true
+│   → ARM_CLIENT_ID and ARM_SUBSCRIPTION_ID are stored as repo secrets
+│   → ARM_TENANT_ID is stored as a repo variable (shared across envs)
+│
+└── TF_MODULES_DEPLOY_KEY  (SSH deploy key, read-only, per product repo)
+    → loaded by webfactory/ssh-agent before \`terraform init\`
+    → allows Terraform to clone git::ssh://git@github.com/nautilus/terraform-modules.git
+\`\`\`
+
+Each product team gets a service principal per environment with a federated
+credential scoped to \`repo:<org>/<repo>:environment:<env>\`. The platform team
+provisions these during onboarding.
+
+---
+
+## State isolation
+
+Every project + environment combination gets its own state file, keyed
+automatically by \`BaseAzureStack\` from the \`project\` and \`environment\` arguments.
+Product teams cannot change the key.
+
+\`\`\`
+Azure Blob Storage account: platformtfstate
+  container: tfstate
+    portal/dev/terraform.tfstate
+    portal/staging/terraform.tfstate
+    portal/prod/terraform.tfstate
+    myapp/dev/terraform.tfstate
+    myapp/staging/terraform.tfstate
+    myapp/prod/terraform.tfstate
+    ...
+\`\`\`
+
+State is locked via Azure blob lease during apply. If a pipeline job is cancelled
+mid-run, the lease may persist. See
+[Product Team Maintenance — State lock](#platform-product-maintenance)
+for how to release it.
+
+---
+
+## Module versioning contract
+
+The construct libraries pin an explicit Git tag when sourcing each Terraform module:
+
+\`\`\`
+git::ssh://git@github.com/nautilus/terraform-modules.git//modules/networking?ref=v1.4.0
+\`\`\`
+
+The construct library package version and the module tag it references are always
+identical. Releasing \`nautilus-infra==1.5.0\` requires cutting \`v1.5.0\` in the module
+repo first and updating the source strings in all five language libraries.
+
+Product teams upgrade by changing one line in their dependency file. The module
+pin upgrades automatically with the package.
+
+---
+
+## Data flow — pull request
+
+\`\`\`
+Product team pushes a branch
+        │
+        ▼
+[validate]              tf-validate.yml
+  terraform fmt -check -recursive
+  terraform init -backend=false
+  terraform validate
+        │
+        ▼
+[changes]               tf-changes.yml
+  dorny/paths-filter → which of shared/dev/qa/stage/prod changed?
+  outputs: shared, dev, qa, stage, prod  (true/false each)
+        │
+        ├─ shared OR dev   ──►  [plan-dev]    ─┐
+        ├─ shared OR qa    ──►  [plan-qa]     ─┤  tf-plan.yml
+        ├─ shared OR stage ──►  [plan-stage]  ─┤  parallel, cancel-in-progress
+        └─ shared OR prod  ──►  [plan-prod]   ─┘
+                                      │
+                          each plan job:
+                            terraform init -backend-config=../<env>/backend.hcl
+                            terraform plan -var-file=../<env>/terraform.tfvars
+                            conftest test  → policy gate (blocks PR if violated)
+                            → plan summary posted as PR comment
+\`\`\`
+
+## Data flow — merge to main
+
+\`\`\`
+[deploy-dev]    tf-deploy.yml  (automatic)
+[deploy-qa]     tf-deploy.yml  (automatic, after dev succeeds)
+[gate-stage]    inline job, environment: stage  → approval required
+[deploy-stage]  tf-deploy.yml  (after approval)
+[gate-prod]     inline job, environment: prod   → approval required
+[deploy-prod]   tf-deploy.yml  (after approval)
+\`\`\`
+
+The gate jobs (\`gate-stage\`, \`gate-prod\`) are inline in the calling workflow, not
+in the reusable workflows. This is required because GitHub evaluates environment
+protection rules against the repository where the workflow job is defined. A job
+inside a reusable workflow is evaluated against the reusable workflow's repo, which
+does not have the product team's environment configuration.
+
+## Data flow — scheduled drift detection
+
+\`\`\`
+[drift-dev / drift-qa / drift-stage / drift-prod]   tf-drift.yml  (all parallel)
+  terraform init
+  terraform plan -detailed-exitcode
+    exit 0 → no drift, job succeeds silently
+    exit 2 → drift detected:
+               check for existing open issue labelled "drift" + "<env>"
+               if exists → add comment with new plan output
+               if not    → open new issue with plan output
+    exit 1 → plan error, job fails
+\`\`\`
+
+The validate job does not run on the drift schedule — drift jobs authenticate
+independently and a validate pass is not needed.
+`,
+  "bootstrap": `# Bootstrap
+
+The \`bootstrap/\` directory contains Terraform that provisions the Azure and Azure
+AD resources the platform depends on before any product team infrastructure can
+be deployed. Run these once when first implementing Nautilus, then once per new
+product team during onboarding.
+
+\`\`\`
+bootstrap/
+├── platform/        Run once — creates the state backend and platform SP
+└── product-team/    Run once per product team — creates SPs, OIDC creds, and RBAC
+\`\`\`
+
+---
+
+## Prerequisites
+
+Before running bootstrap you need:
+
+- **Azure CLI** authenticated as a principal with:
+  - Owner on the platform subscription (to create RBAC assignments)
+  - Global Administrator or Application Administrator in Azure AD (to create applications and service principals)
+- **Terraform ≥ 1.7** installed locally
+- The \`github_org\` and \`github_repo\` for the Nautilus platform repo
+
+---
+
+## Step 1 — Platform bootstrap
+
+Run this once to create the shared Azure infrastructure the entire platform depends on.
+
+### What it creates
+
+| Resource | Purpose |
+|----------|---------|
+| \`azurerm_resource_group\` | Container for platform infrastructure |
+| \`azurerm_storage_account\` | Terraform state backend (\`platformtfstate\`) |
+| \`azurerm_storage_container\` | \`tfstate\` container within the account |
+| \`azurerm_management_lock\` | Protects the state account from accidental deletion |
+| \`azuread_application\` + SP | Platform service principal (\`nautilus-platform\`) |
+| \`azuread_application_federated_identity_credential\` | OIDC credential scoped to the Nautilus repo's main branch |
+| \`azurerm_role_assignment\` × 2 | Contributor on platform subscription; Storage Blob Data Contributor on state account |
+
+### Apply
+
+\`\`\`bash
+cd bootstrap/platform
+
+# Authenticate
+az login
+az account set --subscription <platform-subscription-id>
+
+# Initialise with local state (intentional — this creates the remote backend)
+terraform init
+
+# Review the plan
+terraform plan \\
+  -var="platform_subscription_id=<platform-subscription-id>" \\
+  -var="github_org=nautilus" \\
+  -var="github_repo=project-nautilus"
+
+# Apply
+terraform apply \\
+  -var="platform_subscription_id=<platform-subscription-id>" \\
+  -var="github_org=nautilus" \\
+  -var="github_repo=project-nautilus"
+\`\`\`
+
+### Read the outputs
+
+After apply, Terraform prints the \`next_steps\` output with ready-to-copy values:
+
+\`\`\`bash
+terraform output next_steps
+terraform output state_storage_account_id   # needed for product-team bootstrap
+terraform output tenant_id                  # AZURE_TENANT_ID variable
+\`\`\`
+
+Set the GitHub Actions secrets and variables on the Nautilus repo as instructed.
+
+### Optional: migrate local state to the remote backend
+
+The platform bootstrap uses local state by default. To store its own state
+remotely (recommended for team environments):
+
+\`\`\`bash
+# Add to bootstrap/platform/main.tf — replace the backend "local" block:
+backend "azurerm" {
+  storage_account_name = "platformtfstate"
+  container_name       = "tfstate"
+  key                  = "bootstrap/platform/terraform.tfstate"
+  use_oidc             = true
+}
+
+terraform init -migrate-state
+\`\`\`
+
+---
+
+## Step 2 — Product team bootstrap
+
+Run this once per product team when onboarding them. It provisions service
+principals and OIDC federated credentials for all four environments.
+
+### What it creates (per environment: dev, qa, stage, prod)
+
+| Resource | Purpose |
+|----------|---------|
+| \`azuread_application\` + SP | One service principal per environment (\`<product>-<env>\`) |
+| \`azuread_application_federated_identity_credential\` | OIDC credential scoped to \`repo:<org>/<repo>:environment:<env>\` |
+| \`azurerm_role_assignment\` (Contributor) | Access to the environment's Azure subscription |
+| \`azurerm_role_assignment\` (Storage Blob Data Contributor) | Access to the platform state account |
+
+### Apply
+
+\`\`\`bash
+cd bootstrap/product-team
+
+terraform init \\
+  -backend-config="storage_account_name=platformtfstate" \\
+  -backend-config="container_name=tfstate" \\
+  -backend-config="key=bootstrap/portal/terraform.tfstate" \\
+  -backend-config="use_oidc=true"
+
+terraform plan \\
+  -var="product_name=portal" \\
+  -var="github_org=nautilus" \\
+  -var="github_repo=portal-infra" \\
+  -var='subscription_ids={"dev":"<dev-sub-id>","qa":"<qa-sub-id>","stage":"<stage-sub-id>","prod":"<prod-sub-id>"}' \\
+  -var="state_storage_account_id=<state_storage_account_id from platform output>" \\
+  -var="platform_subscription_id=<platform-subscription-id>"
+
+terraform apply [same vars]
+\`\`\`
+
+If all environments share a subscription, repeat the same ID for each key:
+
+\`\`\`bash
+-var='subscription_ids={"dev":"<shared-sub-id>","qa":"<shared-sub-id>","stage":"<shared-sub-id>","prod":"<prod-sub-id>"}'
+\`\`\`
+
+### Read the outputs
+
+\`\`\`bash
+terraform output github_secrets
+\`\`\`
+
+This prints the full set of GitHub Actions secrets to copy into the product team's
+repo — one \`CLIENT_ID\` and \`SUBSCRIPTION_ID\` per environment, plus \`TENANT_ID\`.
+
+### Set the remaining secrets manually
+
+The following secrets contain sensitive values and are not managed by Terraform.
+Set them via \`gh secret set\` or the GitHub UI:
+
+\`\`\`bash
+# SSH deploy key for terraform-modules
+gh secret set TF_MODULES_DEPLOY_KEY \\
+  --repo nautilus/portal-infra \\
+  --body "$(cat /path/to/tf_modules_key)"
+
+# PostgreSQL admin password
+gh secret set DB_ADMIN_PASSWORD \\
+  --repo nautilus/portal-infra \\
+  --body "$(openssl rand -base64 32)"
+
+# Log Analytics workspace resource ID
+gh secret set LOG_WORKSPACE_ID \\
+  --repo nautilus/portal-infra \\
+  --body "/subscriptions/.../workspaces/platform-logs"
+\`\`\`
+
+See [Module Maintenance — Provisioning a deploy key](#platform-module-maintenance)
+for SSH key generation.
+
+---
+
+## Running product-team bootstrap for multiple teams
+
+Each product team gets its own Terraform state file keyed by product name.
+Run the module separately for each team:
+
+\`\`\`bash
+for product in portal myapp billing; do
+  terraform -chdir=bootstrap/product-team init \\
+    -backend-config="key=bootstrap/\${product}/terraform.tfstate" \\
+    [other backend-config flags]
+
+  terraform -chdir=bootstrap/product-team apply \\
+    -var="product_name=\${product}" \\
+    [other vars]
+done
+\`\`\`
+
+---
+
+## Rerunning bootstrap
+
+Both modules are idempotent — rerunning them against an existing deployment
+produces no changes unless variables have changed. This makes them safe to rerun:
+
+- To rotate OIDC federated credentials: change the \`display_name\` on the
+  \`azuread_application_federated_identity_credential\` resource, apply, then
+  update the credential subject if needed.
+- To add a new product team environment: update the \`subscription_ids\` variable
+  and apply — Terraform will create the new SP and RBAC without touching existing ones.
+- To change a subscription assignment: update the relevant \`subscription_ids\` entry,
+  apply — Terraform will update the role assignments.
+
+---
+
+## What bootstrap does not provision
+
+| Item | Where to handle it |
+|------|--------------------|
+| The \`platform-infra\` GitHub team | Create manually in GitHub org settings |
+| GitHub repository creation | \`gh repo create\` or GitHub UI |
+| GitHub repo configuration (branch protection, environments, labels) | \`setup/scripts/apply-repo-config.sh\` — see [Repository Setup](#repository-setup) |
+| Internal package registries (PyPI, npm, NuGet, Maven, Go proxy) | Organisation-specific; choose Artifactory, Nexus, or GitHub Packages |
+| Azure Policy governance module deployment | \`cd tf-modules/governance && terraform apply\` — see [Module Maintenance](#platform-module-maintenance) |
+| SSH deploy keys for terraform-modules | Generated and added manually — see [Module Maintenance](#platform-module-maintenance) |
+`,
+  "developer-guide": `# Developer Interface Reference
+
+This document describes the interface Nautilus exposes to product teams. It covers
+what they can build, what the platform enforces, and how to support them when
+things go wrong. Share this document with product teams during onboarding.
+
+---
+
+## What product teams control
+
+Product teams write a single CDKTF stack file in their language of choice. They
+control:
+
+- Which constructs to use and how to configure them
+- Resource sizes, within the platform-approved SKU list
+- Environment-specific values (via tfvars)
+- Stack outputs
+
+Everything beneath the construct API — the Terraform modules, the pipeline, the
+state backend, the credentials, the OPA and Azure policies — is owned by the
+platform team and not visible to product teams.
+
+---
+
+## Supported languages
+
+| Language | Package | Registry |
+|----------|---------|---------|
+| Python | \`nautilus-infra\` | Internal PyPI |
+| TypeScript | \`@nautilus/infra\` | Internal npm |
+| C# | \`Nautilus.Infra\` | Internal NuGet |
+| Java | \`com.nautilus:infra\` | Internal Maven |
+| Go | \`github.com/nautilus/infra-go\` | Internal Go proxy |
+
+All five produce identical Terraform JSON. The synthesized output is what the
+pipeline operates on.
+
+---
+
+## What the platform enforces
+
+### Blocked in all environments
+
+| What | Policy |
+|------|--------|
+| Public IPs (\`azurerm_public_ip\`) | \`deny_public_resources\` |
+| \`public_network_access_enabled = true\` on any resource | \`deny_public_resources\` |
+| Public blob storage (\`allow_blob_public_access = true\`) | \`deny_public_resources\` |
+| VM or PostgreSQL SKUs outside the approved list | \`deny_budget_violations\` |
+| Missing required tags (\`managed_by\`, \`project\`, \`environment\`) | \`deny_missing_required_tags\` |
+
+### Blocked in staging and prod
+
+| What | Policy |
+|------|--------|
+| Creating network resources (VNets, subnets, NSGs, DNS zones, private endpoints) | \`deny_network_outside_dev\` |
+| Creating or modifying RBAC (role assignments, role definitions, managed identities) | \`deny_permission_changes_outside_dev\` |
+| Deleting or replacing any resource | \`deny_deletions_outside_dev\` |
+
+Network infrastructure in staging and prod is managed centrally. Product teams
+reference existing subnet and DNS zone IDs from the platform team via stack inputs
+rather than provisioning their own.
+
+### Approved SKU lists
+
+**Virtual machines (AKS node pools)**
+
+| Environment | Allowed SKUs |
+|-------------|-------------|
+| dev | \`Standard_B2s\`, \`Standard_B4ms\`, \`Standard_D2s_v3\`, \`Standard_D4s_v3\` |
+| staging | dev SKUs + \`Standard_D8s_v3\`, \`Standard_D16s_v3\`, \`Standard_E4s_v3\`, \`Standard_E8s_v3\` |
+| prod | \`Standard_D4s_v3\` through \`Standard_D32s_v3\`, \`Standard_E4s_v3\` through \`Standard_E32s_v3\`, \`Standard_F8s_v2\`, \`Standard_F16s_v2\` |
+
+**PostgreSQL**
+
+| Environment | Allowed SKUs |
+|-------------|-------------|
+| dev | \`B_Standard_B1ms\`, \`B_Standard_B2ms\`, \`GP_Standard_D2s_v3\` |
+| staging | \`GP_Standard_D2s_v3\`, \`GP_Standard_D4s_v3\`, \`GP_Standard_D8s_v3\` |
+| prod | \`GP_Standard_D4s_v3\` through \`GP_Standard_D32s_v3\`, \`MO_Standard_E4ds_v4\`, \`MO_Standard_E8ds_v4\` |
+
+To add a SKU to the allowlist, update \`policy/deny_budget_violations.rego\`.
+
+---
+
+## Stack structure
+
+All stacks inherit from \`BaseAzureStack\`. This base class wires up the AzureRM
+provider, configures the remote state backend, and injects the required tags on
+every resource. Product teams must not configure the provider or backend themselves.
+
+\`\`\`python
+class MyStack(BaseAzureStack):
+    def __init__(self, scope: Construct, id_: str):
+        super().__init__(
+            scope, id_,
+            project="myproduct",           # lowercase, no spaces
+            environment=os.environ["ENVIRONMENT"],  # dev | staging | prod
+            location="eastus",             # optional, defaults to eastus
+        )
+\`\`\`
+
+The \`project\` and \`environment\` values are embedded in every resource name and in
+the state key. Changing them after initial deployment destroys and recreates every
+resource — treat them as permanent identifiers.
+
+The stack raises \`ValueError\` at synthesis time if \`environment\` is not one of
+\`dev\`, \`staging\`, or \`prod\`.
+
+---
+
+## Available constructs
+
+### NetworkConstruct
+
+Provisions a virtual network with subnets, NSGs, and optional private DNS zones.
+
+**Key inputs**
+
+| Input | Type | Notes |
+|-------|------|-------|
+| \`address_space\` | \`list[str]\` | e.g. \`["10.10.0.0/16"]\` |
+| \`subnets\` | \`dict[str, SubnetConfig]\` | Named subnets with address prefix and optional delegation |
+| \`private_dns_zones\` | \`list[str]\` | Zone FQDNs, e.g. \`privatelink.postgres.database.azure.com\` |
+
+Every subnet automatically gets a Network Security Group. Custom inbound or
+outbound rules use \`SubnetConfig(nsg_rules=[...])\`.
+
+**Key outputs**
+
+| Output | Notes |
+|--------|-------|
+| \`vnet_id\` | |
+| \`subnet_ids\` | \`dict[str, str]\` — keyed by subnet name |
+| \`nsg_ids\` | \`dict[str, str]\` — keyed by subnet name |
+| \`dns_zone_ids\` | \`dict[str, str]\` — keyed by zone FQDN |
+
+**Address space planning reference**
+
+| Use | Recommended prefix | Notes |
+|-----|--------------------|-------|
+| AKS nodes | \`/22\` | ~1000 IPs with Azure CNI |
+| PostgreSQL | \`/24\` | Must carry the delegation |
+| App Gateway | \`/27\` | Minimum for WAF_v2 |
+| Private endpoints | \`/28\` | One per target |
+
+---
+
+### DatabaseConstruct
+
+Provisions a PostgreSQL Flexible Server with private VNet integration.
+
+**Key inputs — PostgresConfig**
+
+| Parameter | Type | Default | Notes |
+|-----------|------|---------|-------|
+| \`databases\` | \`list[str]\` | \`[]\` | Database names to create |
+| \`sku\` | \`str\` | \`GP_Standard_D2s_v3\` | Must be on the approved list |
+| \`storage_mb\` | \`int\` | \`32768\` | Min 32 GiB |
+| \`pg_version\` | \`str\` | \`"15"\` | 14, 15, or 16 |
+| \`ha_enabled\` | \`bool\` | \`False\` | Required \`True\` in prod |
+| \`geo_redundant\` | \`bool\` | \`False\` | Enables geo-redundant backups |
+| \`server_configs\` | \`dict[str, str]\` | \`{}\` | PostgreSQL parameter overrides |
+
+The admin password must come from \`os.environ["DB_ADMIN_PASSWORD"]\`, which the
+pipeline injects from the \`DB_ADMIN_PASSWORD\` GitHub secret. It must never be
+hardcoded in the stack.
+
+**Key outputs**
+
+| Output | Notes |
+|--------|-------|
+| \`fqdn\` | Use as the application connection host |
+| \`server_id\` | Use for downstream RBAC |
+| \`server_name\` | |
+
+---
+
+### AksConstruct
+
+Provisions an AKS cluster with Azure CNI, AAD RBAC, and Log Analytics monitoring.
+
+**Key inputs — AksConfig**
+
+| Parameter | Type | Default | Notes |
+|-----------|------|---------|-------|
+| \`kubernetes_version\` | \`str\` | \`"1.29"\` | Platform-approved versions only |
+| \`system_node_vm_size\` | \`str\` | \`Standard_D2s_v3\` | |
+| \`system_node_count\` | \`int\` | \`3\` | Use 3 for zone redundancy in prod |
+| \`additional_node_pools\` | \`dict\` | \`{}\` | Pool name max 12 chars |
+| \`admin_group_object_ids\` | \`list[str]\` | \`[]\` | AAD groups for cluster-admin |
+| \`service_cidr\` | \`str\` | \`10.240.0.0/16\` | Must not overlap VNet |
+| \`dns_service_ip\` | \`str\` | \`10.240.0.10\` | Within \`service_cidr\` |
+
+The system node pool is tainted \`CriticalAddonsOnly=true:NoSchedule\`. Product
+teams should always add at least one additional pool for application workloads.
+
+**Key inputs — NodePoolConfig**
+
+| Parameter | Type | Default | Notes |
+|-----------|------|---------|-------|
+| \`vm_size\` | \`str\` | \`Standard_D4s_v3\` | |
+| \`node_count\` | \`int\` | \`2\` | Used when auto-scaling is off |
+| \`enable_auto_scaling\` | \`bool\` | \`False\` | |
+| \`min_count\` | \`int\` | \`1\` | Requires \`enable_auto_scaling=True\` |
+| \`max_count\` | \`int\` | \`10\` | |
+| \`labels\` | \`dict\` | \`{}\` | Kubernetes node labels |
+| \`taints\` | \`list[str]\` | \`[]\` | e.g. \`["dedicated=gpu:NoSchedule"]\` |
+
+**Key outputs**
+
+| Output | Notes |
+|--------|-------|
+| \`cluster_id\` | Resource ID |
+| \`kubelet_identity_object_id\` | Assign ACR pull, Key Vault read |
+| \`cluster_identity_principal_id\` | Assign Network Contributor |
+
+---
+
+## Secrets and environment variables
+
+No secrets are hardcoded in stack files. All sensitive values come from environment
+variables, injected by the pipeline from GitHub Actions secrets.
+
+| Secret | Injected as | Used for |
+|--------|-------------|---------|
+| \`DB_ADMIN_PASSWORD\` | \`DB_ADMIN_PASSWORD\` env var | PostgreSQL admin password |
+| \`LOG_WORKSPACE_ID\` | \`LOG_WORKSPACE_ID\` env var | Log Analytics workspace resource ID |
+
+For local synthesis, product teams export these manually from a secure source
+(e.g. a key vault) before running \`cdktf synth\`. Synthesis is a dry-run — no
+Azure resources are created.
+
+---
+
+## The pipeline
+
+Product teams copy \`infra.yml\` from the reference implementation (\`tf-azure/\`) into
+their repo. They update the stack name references and do not otherwise modify it.
+
+**PR behaviour**
+1. \`validate\` — fmt-check + validate, runs on every PR
+2. \`changes\` — detects which environment folders changed
+3. \`plan-<env>\` — runs for each affected environment in parallel; posts a plan
+   comment; blocks the PR if any OPA policy is violated
+
+**Merge to main**
+1. \`deploy-dev\` → \`deploy-qa\` — automatic, sequential
+2. \`gate-stage\` — requires manual approval from the platform team
+3. \`deploy-stage\`
+4. \`gate-prod\` — requires manual approval from the platform team
+5. \`deploy-prod\`
+
+Production applies require the platform team as required reviewer on the GitHub
+\`production\` Environment. Configure this in the product team's repo settings.
+
+---
+
+## Stack outputs
+
+Outputs appear in the CI/CD job summary and in the remote state for cross-stack
+references. Product teams should expose all values their application configuration
+needs (e.g. database FQDN, cluster ID).
+
+---
+
+## Upgrading the construct library
+
+The platform team announces breaking changes with a migration guide at least two
+weeks before release. Product teams upgrade by updating their pinned version in
+their dependency file and running a local \`cdktf synth\` to verify compatibility.
+
+Version ranges must not be used — product teams must always pin an exact version.
+
+---
+
+## Troubleshooting reference
+
+This section covers the errors product teams will encounter. Use it to diagnose
+issues quickly when supporting them.
+
+### Synthesis fails — import or module not found
+
+The construct library is not installed or was installed from the wrong registry.
+Confirm the product team is using the correct internal registry URL and the pinned
+version exists there.
+
+### \`ValueError: environment must be dev, staging, or prod\`
+
+The \`ENVIRONMENT\` environment variable is missing or has an unexpected value. Only
+\`dev\`, \`staging\`, and \`prod\` are accepted. Check how the pipeline injects it.
+
+### \`terraform init\` fails — \`ssh: connect to host github.com port 22\`
+
+The \`TF_MODULES_DEPLOY_KEY\` secret is missing or invalid in the product team's
+repo. Verify the secret exists. If it was recently rotated on the module repo,
+ensure the updated private key was also added to the product repo.
+
+### Policy check fails — \`DENY [public-resources]\`
+
+The plan includes a public IP or enables public network access. This is always
+blocked. Review the stack for \`public_network_access_enabled\` or any
+\`azurerm_public_ip\` resource.
+
+### Policy check fails — \`DENY [network-outside-dev]\`
+
+A \`NetworkConstruct\` is present in a staging or prod stack. Network in those
+environments is platform-managed. The product team should remove the construct
+and use platform-provided subnet and DNS zone IDs as stack inputs instead.
+
+### Policy check fails — \`DENY [permissions-outside-dev]\`
+
+The stack creates or modifies a role assignment, role definition, or managed
+identity in staging or prod. Remove it from the stack. If the permission is
+legitimate, the platform team provisions it directly.
+
+### Policy check fails — \`DENY [deletions-outside-dev]\`
+
+The plan includes a destruction or replacement in staging or prod. Common causes:
+
+- The \`project\` or \`environment\` value changed — these are in resource names and
+  cause full replacement. Treat them as immutable identifiers.
+- A construct library upgrade changed a resource attribute that forces replacement.
+- The product team intentionally removed a resource.
+
+For intentional decommissions, follow the
+[supervised decommission process](#platform-product-maintenance).
+
+### Policy check fails — \`DENY [budget]\`
+
+The chosen SKU is not on the approved list for the target environment. Review the
+SKU tables above. To add a SKU, update \`policy/deny_budget_violations.rego\`.
+
+### Policy check fails — \`DENY [required-tags]\`
+
+A resource is missing one or more of the required tags (\`managed_by\`, \`project\`,
+\`environment\`). Required tags are injected automatically by \`BaseAzureStack\` onto
+all taggable resources. If a resource type is exempt (locks, role assignments, node
+pools, etc.) it is listed in \`deny_missing_required_tags.rego\`. If a new resource
+type needs exempting, update that file.
+
+### The plan shows unexpected resource destruction
+
+Common causes: \`project\` or \`environment\` changed, or a construct library upgrade
+changed a resource attribute. Review the plan carefully before approving. Block
+the PR and investigate with the product team if the destruction is unexpected.
+
+### Apply failed mid-way — partial state
+
+Do not let the product team retry immediately. Download the state file and identify
+what was created before the failure. Fix the root cause, then re-trigger the
+pipeline from the same commit. See
+[Product Team Maintenance — Handling a failed apply](#platform-product-maintenance)
+for the full procedure.
+`,
+  "platform-module-maintenance": `# Module Maintenance
+
+How the platform team manages \`nautilus/terraform-modules\` — the private Terraform
+module library that backs every Nautilus construct.
+
+---
+
+## Repository conventions
+
+### Directory layout
+
+\`\`\`
+terraform-modules/
+├── modules/
+│   ├── networking/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   ├── outputs.tf
+│   │   ├── tests/networking.tftest.hcl
+│   │   └── README.md
+│   ├── database/
+│   │   └── postgres/
+│   │       ├── main.tf
+│   │       ├── variables.tf
+│   │       ├── outputs.tf
+│   │       ├── tests/database.tftest.hcl
+│   │       └── README.md
+│   └── compute/
+│       └── aks/
+│           ├── main.tf
+│           ├── variables.tf
+│           ├── outputs.tf
+│           ├── tests/aks.tftest.hcl
+│           └── README.md
+├── governance/
+├── CHANGELOG.md
+└── .github/workflows/ci.yml
+\`\`\`
+
+Each module is self-contained. Modules do not call each other — composition happens
+in the CDKTF constructs.
+
+### File responsibilities
+
+| File | Purpose |
+|------|---------|
+| \`variables.tf\` | All input declarations with descriptions and validations |
+| \`main.tf\` | All resources. No \`variable\` or \`output\` blocks. |
+| \`outputs.tf\` | All outputs with descriptions |
+| \`tests/*.tftest.hcl\` | \`terraform test\` suite using \`mock_provider\` |
+| \`README.md\` | Usage example, inputs table, outputs table |
+
+All resource logic stays in \`main.tf\`. Do not split resources across multiple
+\`.tf\` files — it makes code review and grep harder.
+
+---
+
+## Variable conventions
+
+Every module declares these standard variables:
+
+\`\`\`hcl
+variable "project" {
+  description = "Short project name. Used in resource naming and tags."
+  type        = string
+}
+
+variable "environment" {
+  description = "Deployment environment: dev, staging, or prod."
+  type        = string
+  validation {
+    condition     = contains(["dev", "staging", "prod"], var.environment)
+    error_message = "environment must be one of: dev, staging, prod."
+  }
+}
+
+variable "resource_group_name" {
+  description = "Name of the Azure resource group."
+  type        = string
+}
+
+variable "location" {
+  description = "Azure region."
+  type        = string
+  default     = "eastus"
+}
+
+variable "tags" {
+  description = "Azure resource tags. Required tags are injected by the construct library."
+  type        = map(string)
+  default     = {}
+}
+\`\`\`
+
+Rules:
+- Every variable must have a \`description\`.
+- Enumerations must have a \`validation\` block — fail at plan time, not apply.
+- Sensitive values (passwords, keys) must be marked \`sensitive = true\`.
+- Optional variables must have a \`default\`. Required variables must not.
+- Use \`optional(type, default)\` inside \`object()\` types to avoid forcing callers
+  to specify every field.
+
+### Naming resources
+
+Use a consistent \`local\` prefix and the \`this\` alias for each module's primary resource:
+
+\`\`\`hcl
+locals {
+  name_prefix = "\${var.project}-\${var.environment}"
+}
+
+resource "azurerm_virtual_network" "this" {
+  name = "\${local.name_prefix}-vnet"
+  ...
+}
+\`\`\`
+
+The \`this\` alias keeps output references readable (\`azurerm_virtual_network.this.id\`).
+
+---
+
+## Output conventions
+
+Every output must have a \`description\`. Sensitive outputs must be marked
+\`sensitive = true\`.
+
+\`\`\`hcl
+output "server_id" {
+  description = "Resource ID of the PostgreSQL Flexible Server."
+  value       = azurerm_postgresql_flexible_server.this.id
+}
+
+output "administrator_password" {
+  description = "Admin password. Use to bootstrap connection strings."
+  value       = azurerm_postgresql_flexible_server.this.administrator_password
+  sensitive   = true
+}
+\`\`\`
+
+Output names must exactly match the \`get_string()\` calls in the corresponding
+CDKTF construct. Renaming an output is a breaking change — it requires updating
+all five language libraries in the same release and a major version bump.
+
+---
+
+## Adding a new module
+
+### 1. Open a design issue
+
+Before writing any code, document:
+- What resource(s) the module will manage
+- What variables it will expose
+- What outputs it will produce
+- Why an existing module cannot cover the use case
+
+Get at least one other platform engineer to review the design before starting.
+
+### 2. Create the module directory
+
+\`\`\`bash
+mkdir -p modules/<category>/<resource-name>
+touch modules/<category>/<resource-name>/{main.tf,variables.tf,outputs.tf,README.md}
+mkdir -p modules/<category>/<resource-name>/tests
+\`\`\`
+
+### 3. Write variables first
+
+Define inputs before resources. This forces clarity about the module's contract
+before implementation details are committed to.
+
+### 4. Implement main.tf
+
+Follow the naming and aliasing conventions above. Add \`lifecycle\` blocks where
+appropriate:
+
+\`\`\`hcl
+lifecycle {
+  # Passwords are rotated outside Terraform.
+  ignore_changes = [administrator_password]
+}
+\`\`\`
+
+Add a \`azurerm_management_lock\` resource for non-dev environments:
+
+\`\`\`hcl
+resource "azurerm_management_lock" "this" {
+  count      = var.environment != "dev" ? 1 : 0
+  name       = "\${local.name_prefix}-lock"
+  scope      = azurerm_<resource>.this.id
+  lock_level = "CanNotDelete"
+  notes      = "Managed by Nautilus. Remove via supervised decommission only."
+}
+\`\`\`
+
+### 5. Write outputs
+
+Include all values a downstream construct might reasonably need: resource IDs,
+FQDNs, managed identity principal IDs. Outputs are cheap; omitting one later is
+a breaking change.
+
+### 6. Write tests
+
+Create a \`tests/<module>.tftest.hcl\` file using \`mock_provider "azurerm" {}\`.
+Test at minimum: naming conventions, resource counts, management lock absent in dev
+and present in staging/prod, and all declared outputs.
+
+\`\`\`hcl
+mock_provider "azurerm" {}
+
+variables {
+  project            = "test"
+  environment        = "dev"
+  resource_group_name = "test-rg"
+  location           = "eastus"
+}
+
+run "naming_convention" {
+  assert {
+    condition     = azurerm_<resource>.this.name == "test-dev-<suffix>"
+    error_message = "Resource name does not follow the naming convention."
+  }
+}
+\`\`\`
+
+### 7. Add the construct to all five language libraries
+
+A new module is not useful until it has a CDKTF construct. Create a new construct
+file in each library under \`constructs/\` following the existing patterns. Update
+exports:
+
+- **Python**: \`nautilus_infra/constructs/__init__.py\` and \`nautilus_infra/__init__.py\`
+- **TypeScript**: \`src/index.ts\`
+- **C#**: add a new class file (no explicit export needed)
+- **Java**: add a new class file (no explicit export needed)
+- **Go**: add a new \`.go\` file in the \`infra\` package
+
+### 8. Write a README
+
+Every module needs:
+- One-paragraph description
+- Usage example (CDKTF construct, not raw Terraform)
+- Inputs table
+- Outputs table
+
+### 9. Open a PR
+
+CI runs \`fmt -check\`, \`validate\`, and \`terraform test\` on every module automatically.
+All checks must pass before merge.
+
+---
+
+## Modifying an existing module
+
+### Backwards-compatible changes (minor or patch version)
+
+Safe to release without a migration guide:
+- Adding a new **optional** variable (with a default that preserves current behaviour)
+- Adding a new output
+- Adding a new resource that does not replace an existing one
+- Fixing a bug that makes the module behave as documented
+
+### Breaking changes (major version)
+
+Require a major version bump, a written migration guide, and a two-week notice to
+all consuming teams before release:
+- Removing or renaming a variable
+- Changing the type of a variable
+- Removing or renaming an output
+- Changing a resource's name or type (causes destroy + recreate)
+- Adding a required variable (no default)
+- Changing a \`lifecycle.ignore_changes\` list in a way that causes unexpected updates
+
+When in doubt, treat it as breaking.
+
+### How to make a breaking change safely
+
+1. Add the new variable or output alongside the old one (both present).
+2. Deprecate the old one in the README.
+3. Release as a minor version with both present.
+4. Give consuming teams one full sprint to upgrade.
+5. Remove the old one in the next major version.
+
+---
+
+## Testing
+
+### CI — always required
+
+The CI workflow (\`tf-modules/.github/workflows/ci.yml\`) runs on every PR:
+- \`terraform fmt -check -recursive modules/\`
+- \`terraform init -backend=false\` + \`terraform validate\` per module
+- \`terraform test\` per module
+
+Run these locally before pushing:
+
+\`\`\`bash
+terraform fmt -recursive modules/
+cd modules/networking && terraform init -backend=false && terraform validate
+cd modules/networking && terraform test
+\`\`\`
+
+### Construct unit tests
+
+Each language library synthesizes constructs to JSON and asserts the module call
+is wired correctly. Run them when changing module variable or output names.
+
+\`\`\`bash
+cd constructs/python && pip install -e ".[dev]" && pytest tests/ -v
+cd constructs/typescript && npm install && npm test
+cd constructs/csharp && dotnet test Nautilus.Infra.Tests/
+cd constructs/java && mvn test --batch-mode
+cd constructs/go && go test ./...
+\`\`\`
+
+These tests catch mismatches between the construct (e.g. \`subnet_id\`) and the
+module variable name (e.g. \`delegated_subnet_id\`).
+
+### OPA policy tests
+
+Run the OPA test suite before merging any policy change:
+
+\`\`\`bash
+opa test policy/ -v
+\`\`\`
+
+---
+
+## Versioning and release process
+
+The module repo uses Git tags following **Semantic Versioning** (\`vMAJOR.MINOR.PATCH\`).
+Construct library package versions always match the module tag they reference.
+
+### Release checklist
+
+- [ ] All CI checks pass on \`main\`
+- [ ] \`CHANGELOG.md\` updated under the new version heading
+- [ ] Module \`README.md\` updated if any inputs or outputs changed
+- [ ] For breaking changes: migration guide written and distributed to all consuming teams
+- [ ] For breaking changes: two-week notice period elapsed
+- [ ] Construct updated in all five language libraries and unit tests pass
+- [ ] All five package versions bumped to match the new tag and source pins updated
+- [ ] All five packages published to their respective internal registries (automated — see below)
+
+### Tagging a release
+
+\`\`\`bash
+git checkout main && git pull
+git tag -s v1.5.0 -m "Release v1.5.0"
+git push origin v1.5.0
+\`\`\`
+
+Use signed tags (\`-s\`). The CI \`tag-check\` job validates the semver format.
+
+### Updating module source pins in the construct libraries
+
+Before tagging, update the module source string in each affected construct file
+across all five libraries and bump each package version to match:
+
+\`\`\`python
+# Python — constructs/python/nautilus_infra/constructs/network.py
+_MODULE_SOURCE = (
+    "git::ssh://git@github.com/nautilus/terraform-modules.git"
+    "//modules/networking?ref=v1.5.0"
+)
+\`\`\`
+
+\`\`\`typescript
+// TypeScript — constructs/typescript/src/network.ts
+const NETWORK_MODULE_SOURCE =
+  "git::ssh://git@github.com/nautilus/terraform-modules.git" +
+  "//modules/networking?ref=v1.5.0";
+\`\`\`
+
+Apply the same pattern to C#, Java, and Go. Open a PR for these changes, merge
+it, and then push the tag. The publish workflow triggers automatically on the tag.
+
+### Automated registry publishing
+
+Each construct library's CI workflow (\`constructs/<lang>/.github/workflows/ci.yml\`)
+publishes automatically when a semver tag is pushed. Publishing is gated on the
+\`test\` job passing and on the \`registry\` GitHub Environment, which should be
+configured with the platform team as required reviewers.
+
+The workflow verifies the git tag matches the version declared in the package
+manifest before publishing. A mismatch fails the job before any artifact is
+uploaded.
+
+| Language | Registry | Publish mechanism | Secret |
+|----------|---------|-------------------|--------|
+| Python | Internal PyPI (\`pkgs.nautilus.internal\`) | \`twine upload\` with \`__token__\` auth | \`REGISTRY_TOKEN\` |
+| TypeScript | Internal npm (\`npm.nautilus.internal\`) | \`npm publish\` via \`NODE_AUTH_TOKEN\` | \`REGISTRY_TOKEN\` |
+| Java | Internal Maven (\`maven.nautilus.internal\`) | \`mvn deploy\` with server credentials | \`REGISTRY_TOKEN\` |
+| C# | Internal NuGet (\`nuget.nautilus.internal\`) | \`dotnet nuget push\` with API key | \`REGISTRY_TOKEN\` |
+| Go | Internal Go proxy (\`goproxy.nautilus.internal\`) | Proxy cache warmed via HTTP request | \`REGISTRY_TOKEN\` |
+
+Go is different from the other four: Go modules are versioned by git tag, not a
+package manifest. The publish job warms the internal Athens proxy cache by
+requesting the new version immediately after the tag is pushed. Consumers get the
+module on their first \`go get\` without waiting for the proxy to fetch it lazily.
+
+### Setting up the \`registry\` GitHub Environment
+
+Each construct library repo needs a \`registry\` Environment configured before
+publishing will work:
+
+1. Repo **Settings → Environments → New environment** → name it \`registry\`
+2. Add **Required reviewers**: platform team lead (or the full platform team)
+3. Add the \`REGISTRY_TOKEN\` secret scoped to this environment
+
+Scoping \`REGISTRY_TOKEN\` to the environment (rather than at the repo level)
+ensures it is only accessible to the publish job and only after a reviewer approves.
+
+---
+
+## Access control
+
+The \`nautilus/terraform-modules\` repo is private.
+
+| GitHub team | Access |
+|-------------|--------|
+| \`platform-infra\` | Write (merge PRs, create tags) |
+| Product team developers | No direct access |
+| CI runners (product repos) | Read-only via per-repo SSH deploy key |
+
+Each product repo has its own deploy key — keys are not shared across repos.
+
+### Provisioning a deploy key for a new product team
+
+\`\`\`bash
+# Generate a key pair (no passphrase)
+ssh-keygen -t ed25519 -C "github-actions@nautilus/<product>-infra" -f /tmp/tf_modules_key
+
+# Add public key as a read-only deploy key on the terraform-modules repo:
+#   Settings → Deploy keys → Add deploy key → Allow write access: NO
+
+# Add private key as a secret in the product team's repo:
+#   Settings → Secrets and variables → Actions → New secret → TF_MODULES_DEPLOY_KEY
+\`\`\`
+
+Rotate deploy keys annually and immediately on suspected compromise.
+
+---
+
+## Releasing reusable workflows
+
+The \`nautilus/reusable-workflows\` repo is versioned independently from the Terraform
+modules. Calling workflows (\`infra.yml\`) pin a specific tag:
+
+\`\`\`yaml
+uses: nautilus/reusable-workflows/.github/workflows/tf-plan.yml@v1.0.0
+\`\`\`
+
+### When to cut a new release
+
+Cut a new reusable-workflows release when:
+- A new workflow step is added or an existing step changes behaviour
+- An action version is bumped (e.g. \`actions/checkout@v4\` → \`v5\`)
+- A new workflow is added (e.g. \`tf-drift.yml\`)
+- A bug in the pipeline logic is fixed
+
+### Breaking vs. non-breaking changes
+
+A change is **breaking** if it removes or renames a workflow input or secret that
+calling workflows reference. Inputs added with defaults and entirely new workflows
+are non-breaking. When in doubt, treat it as breaking.
+
+Breaking changes require:
+- A migration guide showing how to update \`infra.yml\` in each product repo
+- Two-week notice to all product teams
+- A coordinated PR push to every consuming repo (see the pipeline template update
+  script in [Product Team Maintenance — Routine maintenance](#platform-product-maintenance))
+
+### Release checklist
+
+- [ ] All CI checks pass on \`main\` (workflow trigger tests)
+- [ ] Calling workflow in \`tf-azure/\` updated and tested end-to-end
+- [ ] For breaking changes: migration guide written and distributed
+- [ ] For breaking changes: two-week notice elapsed
+
+### Tagging a release
+
+\`\`\`bash
+git checkout main && git pull
+git tag -s v1.1.0 -m "Release v1.1.0"
+git push origin v1.1.0
+\`\`\`
+
+The CI \`tag-check\` job validates the semver format on every tag push.
+
+### Updating the pin in product repos
+
+After tagging, open a PR on every product team's infra repo to update the
+\`@v1.x.x\` pin across all \`uses:\` lines in their \`infra.yml\`. Use the bulk PR
+script documented in [Product Team Maintenance — Routine maintenance](#platform-product-maintenance).
+
+---
+
+## Maintaining enforcement policies
+
+### OPA/conftest policies (\`policy/\`)
+
+OPA policies are reviewed like any code change — a PR is required. The OPA test
+suite (\`*_test.rego\`) must be updated alongside the policy and must pass before
+merging:
+
+\`\`\`bash
+opa test policy/ -v
+\`\`\`
+
+**When to update OPA policies:**
+- A new resource type must be blocked (add to the relevant type set)
+- A new SKU is approved (add to \`deny_budget_violations.rego\`)
+- An existing policy is too broad and blocking legitimate use
+
+**Testing a policy change locally:**
+
+\`\`\`bash
+# Get a real plan JSON to test against
+terraform show -json tfplan > tfplan.json
+
+# Run all policies against it
+conftest test tfplan.json --policy policy/ --data <(printf '{"environment":"prod"}')
+\`\`\`
+
+Always test both the case that should be denied and the case that should pass.
+
+### Azure Policy (\`tf-modules/governance/\`)
+
+Azure Policy is the ARM-level enforcement backstop. Changes to Azure Policy
+definitions are Terraform changes in \`tf-modules/governance/\` and go through the
+normal module PR and tag process.
+
+The governance module is applied by the platform team from a privileged workspace
+— not by product team pipelines:
+
+\`\`\`bash
+cd tf-modules/governance
+terraform init
+terraform plan    # review carefully — this affects all subscriptions
+terraform apply
+\`\`\`
+
+**When to update Azure Policy:**
+- A new resource type must be blocked at the ARM level
+- Scope needs to change (new subscription added for a new environment)
+- Budget caps require adjustment (\`variables.tf → monthly_budget_amounts\`)
+
+### Management locks
+
+Management locks are defined inside each Terraform module with a count gated on
+\`var.environment != "dev"\`. They are created automatically when a product team's
+stack applies in staging or prod. No separate management is required.
+
+To remove a lock for a supervised decommission, see
+[Product Team Maintenance — Supervised decommission](#platform-product-maintenance).
+`,
+  "platform-product-maintenance": `# Product Team Maintenance
+
+How the platform team supports product teams that run on Nautilus: reviewing
+their PRs, managing state, handling incidents, onboarding new teams, and
+coordinating module upgrades.
+
+---
+
+## What the platform team owns per product team
+
+| Responsibility | Details |
+|----------------|---------|
+| CI/CD pipeline template | \`infra.yml\` — the team copies it, the platform team maintains it |
+| Remote state backend | Blob Storage account, container, and RBAC |
+| Azure provider credentials | Service principal per product, OIDC federated credentials |
+| Module access | Deploy key provisioning (\`TF_MODULES_DEPLOY_KEY\`) |
+| Production approval gate | Required reviewer on the \`stage\` and \`prod\` GitHub Environments |
+| OPA/conftest policies | \`policy/\` rules that gate every \`terraform apply\` |
+| Azure Policy governance | Policy definitions and assignments across all subscriptions |
+| Management lock removal | Supervised decommissions of protected resources |
+| Incident response | Failed applies, state corruption, unexpected drift |
+| Module upgrades | Coordinating breaking changes across all consuming repos |
+
+The product team owns their stack file, their package version pin, and their
+application-level configuration.
+
+---
+
+## Reviewing a product team's PR
+
+The platform team is a required reviewer for all PRs that touch infrastructure
+in staging or prod environments. When reviewing:
+
+### Structural checks
+
+- [ ] Stack inherits from \`BaseAzureStack\`, not \`TerraformStack\` directly.
+- [ ] \`project\` and \`environment\` are passed correctly to \`super().__init__()\`.
+- [ ] No hardcoded secrets — passwords and tokens must come from \`os.environ\`.
+- [ ] No raw \`TerraformModule\` or \`TerraformResource\` calls — only approved constructs.
+- [ ] Stack outputs are descriptive and do not expose sensitive values as plaintext.
+
+### Plan review
+
+The pipeline posts a Terraform plan as a PR comment. Read it carefully:
+
+\`\`\`
+# azurerm_kubernetes_cluster.this will be created
+  + resource ...
+
+# azurerm_postgresql_flexible_server.this must be replaced
+-/+ resource ...   ← DESTRUCTIVE — investigate before approving
+\`\`\`
+
+Red flags:
+
+| Signal | Action |
+|--------|--------|
+| \`-/+\` (destroy and recreate) on a stateful resource (DB, cluster) | Block and discuss with the team |
+| Unexpected new resources not mentioned in the PR description | Ask the developer to explain |
+| Changes to \`administrator_password\` on an existing server | Confirm this is intentional rotation |
+| \`project\` or \`environment\` values changed | Block — these are in resource names; changing them destroys everything |
+| \`?ref=\` tag in module source doesn't match the declared construct library version | Block — version mismatch means undefined behaviour |
+
+The OPA policy gate runs before this plan is posted. By the time you see the
+plan, it has already passed automated policy checks. Your review focuses on
+intent and correctness.
+
+### Approving
+
+If the plan looks correct, approve in GitHub. The \`stage\` and \`prod\` Environment
+gates require a separate manual approval before apply runs.
+
+---
+
+## Handling policy violations
+
+### A PR is blocked by the OPA policy gate
+
+The pipeline annotates the specific violation on the PR diff. Common patterns:
+
+- **\`DENY [deletions-outside-dev]\`**: If the deletion is intentional (decommission),
+  follow the [supervised decommission](#supervised-decommission-in-stagingprod) process.
+- **\`DENY [network-outside-dev]\`** or **\`DENY [permissions-outside-dev]\`**: The team
+  needs to remove the offending resource from their stack. If there is a legitimate
+  need, the platform team handles the change through a privileged pipeline.
+- **\`DENY [budget]\`**: The team needs a different SKU, or the SKU needs to be added
+  to \`policy/deny_budget_violations.rego\`.
+- **\`DENY [required-tags]\`**: A resource type is missing required tags. If the type
+  should be exempt (e.g. a new Azure resource type), add it to the exempt list in
+  \`policy/deny_missing_required_tags.rego\`.
+
+### An apply fails with an Azure Policy denial
+
+This means the OPA gate was bypassed (e.g. someone ran \`terraform apply\` manually
+outside the pipeline) or there is a gap in the OPA policies.
+
+1. Identify the resource type and property from the error message.
+2. If bypassed: investigate how and remediate access.
+3. If an OPA gap: add the missing rule to the relevant \`.rego\` file and open a PR.
+
+---
+
+## Supervised decommission in staging/prod
+
+Deleting resources in staging or prod requires three steps. Management locks
+protect all non-dev resources from accidental destruction.
+
+**Step 1 — Remove the management lock** (platform team only):
+
+\`\`\`bash
+# List locks on the resource group
+az lock list --resource-group <rg-name> --output table
+
+# Remove the specific lock
+az lock delete --name <lock-name> --resource-group <rg-name>
+\`\`\`
+
+**Step 2 — Remove the resource from the stack and merge**:
+
+The product team removes the resource from their stack file. The PR will now pass
+the deletion policy because the lock removal is a deliberate, documented act.
+Approve and apply.
+
+**Step 3 — Confirm**:
+
+After apply succeeds, confirm the resource is gone. The management lock does not
+need to be re-created — the resource no longer exists.
+
+Document the decommission (what was removed, why, who approved) in whatever
+incident or change tracking system your team uses.
+
+---
+
+## Understanding the synthesized output
+
+When debugging a pipeline failure, inspect the synthesized Terraform JSON.
+Download the \`cdktf-out-<sha>\` artifact from the failed workflow run.
+
+\`\`\`
+cdktf.out/
+└── stacks/
+    └── portal-stack/
+        ├── cdk.tf.json          Main Terraform configuration
+        └── .terraform.lock.hcl  Provider lock file (generated by init)
+\`\`\`
+
+Inspect module calls, variable values, and backend configuration:
+
+\`\`\`bash
+cat cdktf.out/stacks/portal-stack/cdk.tf.json | jq '.module'
+\`\`\`
+
+To reproduce locally (requires Azure credentials and SSH key for modules):
+
+\`\`\`bash
+cd cdktf.out/stacks/portal-stack
+eval $(ssh-agent) && ssh-add /path/to/tf_modules_deploy_key
+terraform init
+terraform plan
+\`\`\`
+
+---
+
+## Managing remote state
+
+State files live in the platform-managed Blob Storage account:
+
+\`\`\`
+Storage account: platformtfstate
+Container:       tfstate
+  portal/dev/terraform.tfstate
+  portal/staging/terraform.tfstate
+  portal/prod/terraform.tfstate
+  myapp/dev/terraform.tfstate
+  ...
+\`\`\`
+
+The state key (\`{project}/{environment}/terraform.tfstate\`) is set by
+\`BaseAzureStack\` and cannot be changed by product teams.
+
+### Viewing state
+
+\`\`\`bash
+# Requires Storage Blob Data Contributor on the platformtfstate account
+az storage blob download \\
+  --account-name platformtfstate \\
+  --container-name tfstate \\
+  --name portal/prod/terraform.tfstate \\
+  --file portal-prod.tfstate
+
+terraform show -json portal-prod.tfstate | jq '.values.root_module'
+\`\`\`
+
+### State lock
+
+Terraform uses blob lease-based locking. If a pipeline job is cancelled mid-run,
+the lease may persist. Before breaking a lease, confirm with the product team
+that no pipeline is actually running.
+
+\`\`\`bash
+# Check the lease state on the blob
+az storage blob show \\
+  --account-name platformtfstate \\
+  --container-name tfstate \\
+  --name portal/prod/terraform.tfstate \\
+  --query "properties.lease"
+
+# Break the lease (requires Storage Account Contributor)
+az storage blob lease break \\
+  --account-name platformtfstate \\
+  --container-name tfstate \\
+  --name portal/prod/terraform.tfstate
+\`\`\`
+
+### State surgery
+
+If state becomes inconsistent — for example, a resource was deleted in Azure
+manually but still exists in state — use \`terraform state rm\` to remove the stale
+reference, then re-import or let the next apply recreate it.
+
+\`\`\`bash
+# Remove a stale resource from state
+terraform state rm 'module.networking.azurerm_subnet.this["db"]'
+
+# Import an existing resource into state
+terraform import \\
+  'module.networking.azurerm_subnet.this["db"]' \\
+  /subscriptions/<id>/resourceGroups/portal-prod-rg/providers/Microsoft.Network/...
+\`\`\`
+
+State surgery must always be performed with the product team informed and on
+standby. Keep a written record of every change made and why.
+
+---
+
+## Handling a failed apply
+
+### 1. Assess the failure
+
+Pull up the failed GitHub Actions run. The \`terraform apply\` step output shows
+which resource failed and why.
+
+| Failure | Likely cause |
+|---------|-------------|
+| \`AuthorizationFailed\` | Service principal lacks a required RBAC role |
+| \`ResourceGroupNotFound\` | Networking module has not created the RG yet (ordering issue) |
+| \`QuotaExceeded\` | Subscription vCPU quota insufficient for the requested VM size |
+| \`InvalidParameter\` | A variable value violates an Azure constraint (e.g. password complexity) |
+| \`ResourceAlreadyExists\` | A resource with the same name was created outside Terraform |
+
+### 2. Determine what was created
+
+Terraform applies are not atomic. Some resources may have been created before the
+failure. Check the state file to see what succeeded:
+
+\`\`\`bash
+terraform show -json portal-prod.tfstate \\
+  | jq '[.values.root_module.child_modules[].resources[].address]'
+\`\`\`
+
+### 3. Fix and re-run
+
+Fix the root cause (RBAC assignment, quota request, corrected variable value).
+Re-trigger the pipeline from the same commit — do not force-push or amend.
+
+> **Important:** If the \`tfplan\` artifact has expired (default 3-day retention,
+> 90 days for prod), re-run from the \`synth\` job to generate a fresh plan.
+> Review the new plan before approving apply.
+
+### 4. If partial apply left inconsistent state
+
+Inform the product team. Do not attempt manual remediation without coordinating
+with the full platform team. Follow the [state surgery](#state-surgery) procedure
+if needed.
+
+---
+
+## Emergency (break-glass) deployment
+
+> Use this only when the pipeline is broken and a production fix cannot wait.
+> Every break-glass deployment must be logged and reviewed post-incident.
+> Two platform team members must be present.
+
+### When to use
+
+- The GitHub Actions runner is offline and a critical production fix must be deployed.
+- The reusable workflow has a bug that blocks all deploys and a hotfix is urgent.
+- Azure Policy or a management lock is blocking a legitimate emergency change.
+
+### Prerequisites
+
+- Platform team lead authorization (captured in the incident record before touching anything).
+- A second platform engineer present as witness.
+- Your personal Azure credentials configured with Contributor scope on the target
+  subscription. The OIDC service principal used by the pipeline does not work
+  interactively — use \`az login\` with your personal identity.
+
+### Steps
+
+**1. Open an incident record** before touching anything. Capture: reason for
+break-glass, environment affected, change being deployed, names of both engineers.
+
+**2. Remove the management locks** (non-dev only). Locks exist on the resource
+group, VNet, PostgreSQL server, and AKS cluster. Remove only those needed for
+this specific change — leave all others in place.
+
+\`\`\`bash
+az lock list --resource-group <rg-name> --output table
+az lock delete --name <lock-name> --resource-group <rg-name>
+\`\`\`
+
+**3. Authenticate and initialize**:
+
+\`\`\`bash
+az login
+az account set --subscription <subscription-id>
+
+eval $(ssh-agent) && ssh-add /path/to/tf_modules_deploy_key
+
+terraform -chdir=shared init -backend-config=../<env>/backend.hcl
+\`\`\`
+
+**4. Plan and review**:
+
+\`\`\`bash
+terraform -chdir=shared plan \\
+  -var-file=../<env>/terraform.tfvars \\
+  -out=emergency.tfplan
+\`\`\`
+
+Confirm the plan matches exactly what the incident record describes. If it shows
+anything unexpected, stop and investigate before applying.
+
+**5. Apply**:
+
+\`\`\`bash
+terraform -chdir=shared apply emergency.tfplan
+\`\`\`
+
+**6. Re-create every management lock you removed**:
+
+\`\`\`bash
+az lock create \\
+  --name "<prefix>-rg-lock" \\
+  --resource-group <rg-name> \\
+  --lock-type CanNotDelete \\
+  --notes "Restored after break-glass: <INCIDENT-REF>"
+
+az lock create \\
+  --name "<prefix>-vnet-lock" \\
+  --resource-id <vnet-resource-id> \\
+  --lock-type CanNotDelete \\
+  --notes "Restored after break-glass: <INCIDENT-REF>"
+# Repeat for PostgreSQL server and AKS cluster as needed
+\`\`\`
+
+**7. Post-incident** (within 24 hours):
+- Close the incident record with the apply output and a summary.
+- Open a follow-up to fix the underlying pipeline issue.
+- Run the drift detection workflow manually to confirm state is consistent.
+- Present the incident at the next platform team meeting to prevent recurrence.
+
+---
+
+## Handling unexpected drift
+
+Drift occurs when the real Azure state diverges from Terraform state — typically
+because someone created, modified, or deleted a resource outside the pipeline.
+
+The daily drift detection workflow (\`tf-drift.yml\`) runs \`terraform plan
+-detailed-exitcode\` against every environment. If changes are detected (exit code 2),
+it opens a GitHub issue labelled \`drift\` and the environment name, or adds a comment
+to an existing open drift issue.
+
+### Resolving drift
+
+1. **Identify the drift**: read the plan output in the GitHub issue.
+2. **Decide the source of truth**:
+   - If Terraform should win: merge with no stack changes. The apply will overwrite
+     the manual change.
+   - If the manual change should win: update the stack code to match reality,
+     then plan and apply.
+3. **Close or update the drift issue** once the state is reconciled.
+
+Never leave drift unresolved across multiple apply cycles. It compounds.
+
+---
+
+## Onboarding a new product team
+
+### Platform team tasks
+
+- [ ] Create a service principal for the team's Azure subscription with the minimum
+  required roles: Contributor on the target resource group scope, plus Storage Blob
+  Data Contributor on the state account.
+- [ ] Configure OIDC federated credentials on the SP for each environment:
+  subject \`repo:<org>/<product>-infra:environment:<env>\`.
+- [ ] Add the SP details as GitHub Actions secrets on the team's repo:
+  \`ARM_CLIENT_ID\`, \`ARM_SUBSCRIPTION_ID\` (per env prefix), and the shared
+  \`ARM_TENANT_ID\` repo variable.
+- [ ] Generate a read-only SSH deploy key for \`nautilus/terraform-modules\`. Add the
+  public key as a deploy key on the module repo. Add the private key as
+  \`TF_MODULES_DEPLOY_KEY\` in the team's repo.
+- [ ] Pre-create the Blob Storage state container path:
+  \`tfstate/<project>/<environment>/terraform.tfstate\`
+- [ ] Configure the \`stage\` and \`prod\` GitHub Environments on the team's repo with
+  the platform team as required reviewer and a 10-minute review window.
+- [ ] Share \`LOG_WORKSPACE_ID\` for the platform-managed Log Analytics workspace.
+
+### Product team tasks (guided by platform team)
+
+- [ ] Set up the repo structure: \`cdktf.json\`, dependency file, \`stacks/\`.
+- [ ] Copy \`infra.yml\` from the reference implementation and update stack name references.
+- [ ] Write a minimal stack (network only), synthesize locally, open a PR.
+- [ ] Platform team reviews and approves the first PR end-to-end together.
+
+The first PR should be a dev-environment, network-only stack to validate the full
+pipeline before adding database or compute resources.
+
+---
+
+## Coordinating module upgrades across teams
+
+When releasing a \`nautilus-infra\` version that contains breaking changes:
+
+1. **Announce** to all consuming teams at least two weeks before the release,
+   with the migration guide attached.
+2. **Publish** the new package versions to all internal registries.
+3. **Notify each team** with the specific changes they need to make to their stack file.
+4. **Support teams** during their upgrade PRs — be available for plan review.
+5. **Set a hard deadline** (typically end of the sprint after announcement). After
+   that, the old module tag may be archived.
+6. **Verify** all teams have merged their upgrades before archiving the old tag.
+
+Track each team's upgrade status (pending / PR open / merged) in whatever tracking
+system your team uses until all teams are on the new version.
+
+---
+
+## Routine maintenance
+
+### Monthly
+
+- [ ] Review state file sizes. Very large states (> 10 MB) may indicate resource
+  sprawl — review with the relevant product team.
+- [ ] Audit deploy key access — confirm no stale keys exist for decommissioned repos.
+- [ ] Check for Terraform provider updates and plan a minor version bump if needed.
+
+### Quarterly
+
+- [ ] Review Kubernetes versions in use and identify clusters approaching end-of-support.
+  Notify teams with a planned upgrade window.
+- [ ] Review PostgreSQL versions in use. Azure ends support on a rolling schedule.
+- [ ] Run \`terraform validate\` on all modules against the latest provider version.
+- [ ] Rotate deploy keys.
+
+### Ad hoc — pipeline template updates
+
+When updating \`infra.yml\` (new action version, new CI step), push the update to
+every consuming repo. Use a script to open identical PRs:
+
+\`\`\`bash
+for repo in portal-infra myapp-infra billing-infra; do
+  gh pr create \\
+    --repo nautilus/$repo \\
+    --title "chore: update infra pipeline to v2.1" \\
+    --body "Platform team maintenance — no stack changes required." \\
+    --base main \\
+    --head platform/pipeline-v2.1
+done
+\`\`\`
+`,
+  "repository-setup": `# Repository Setup
+
+The \`setup/\` directory contains everything needed to configure a GitHub repository
+for use with Nautilus — branch protection, GitHub Environments, team permissions,
+labels, CODEOWNERS, issue templates, and PR templates. A single script and a
+\`workflow_dispatch\` workflow apply the full configuration from one command.
+
+---
+
+## Directory layout
+
+\`\`\`
+setup/
+├── configs/
+│   ├── terraform-modules.json    Platform module library
+│   ├── reusable-workflows.json   Shared CI/CD workflows
+│   ├── construct-library.json    Any of the five construct library repos
+│   └── product-team.json         Any product team infrastructure repo
+├── scripts/
+│   └── apply-repo-config.sh      Applies a config using the gh CLI
+└── templates/
+    ├── CODEOWNERS.platform        For terraform-modules and reusable-workflows
+    ├── CODEOWNERS.construct       For construct library repos
+    ├── CODEOWNERS.product         For product team repos
+    ├── pull_request_template.platform.md
+    ├── pull_request_template.product.md
+    └── issue_templates/
+        ├── bug_report.yml         All platform repos
+        ├── new_module.yml         terraform-modules only
+        ├── sku_request.yml        terraform-modules only
+        └── infra_request.yml      Product team repos
+\`\`\`
+
+---
+
+## What each config applies
+
+| Config | Repo settings | Branch protection | Environments | Teams | Labels | Templates |
+|--------|-------------|-------------------|-------------|-------|--------|-----------|
+| \`terraform-modules\` | Private, squash-only | 2 reviews, code owners, CI required | — | \`platform-infra\` = maintain | 10 labels | CODEOWNERS + PR + 3 issue templates |
+| \`reusable-workflows\` | Private, squash-only | 2 reviews, code owners, CI required | — | \`platform-infra\` = maintain | 8 labels | CODEOWNERS + PR + bug report |
+| \`construct-library\` | Private, squash-only | 1 review, code owners, CI required | \`registry\` (team approval) | \`platform-infra\` = maintain | 3 labels | CODEOWNERS + PR + bug report |
+| \`product-team\` | Private, squash-only | 1 review, code owners, validate required | \`stage\` + \`prod\` (team approval, 10-min wait) | \`platform-infra\` = push | 5 labels | CODEOWNERS + PR + infra request |
+
+### Branch protection details
+
+| Config | Required reviews | Dismiss stale | Code owner review | Enforce admins |
+|--------|-----------------|--------------|-------------------|---------------|
+| \`terraform-modules\` | 2 | ✅ | ✅ | ✅ |
+| \`reusable-workflows\` | 2 | ✅ | ✅ | ✅ |
+| \`construct-library\` | 1 | ✅ | ✅ | ✅ |
+| \`product-team\` | 1 | ✅ | ✅ | ❌ |
+
+Required status check contexts (must match CI job IDs exactly):
+
+| Config | Contexts |
+|--------|---------|
+| \`terraform-modules\` | \`validate\`, \`test\` |
+| \`reusable-workflows\` | \`test\` |
+| \`construct-library\` | \`test\` |
+| \`product-team\` | \`validate\` |
+
+---
+
+## Prerequisites
+
+Before running setup, you need:
+
+1. **A PAT with the right scopes.** Create a Personal Access Token (classic) with:
+   - \`repo\` — read/write repository settings, branch protection, environments
+   - \`admin:org\` — manage team repository permissions
+   - \`read:org\` — resolve team slugs to IDs
+
+   Store it as \`PLATFORM_GITHUB_TOKEN\` in this repo's Actions secrets.
+
+2. **The target repository must already exist.** The script configures an existing
+   repo — it does not create one. Create the repo first via the GitHub UI or
+   \`gh repo create\`.
+
+3. **The \`platform-infra\` team must exist** in the target organization. The script
+   resolves the team slug to an ID when configuring environments and team permissions.
+
+4. **\`jq\` and \`gh\` CLI** installed if running the script locally.
+
+---
+
+## Running via GitHub Actions (recommended)
+
+1. Go to **Actions → Repository setup → Run workflow**
+2. Fill in the inputs:
+   - **org**: your GitHub organization slug
+   - **repo**: the repository name (e.g. \`portal-infra\`)
+   - **config**: choose from the dropdown
+   - **dry run**: check this first to preview changes without applying them
+3. Click **Run workflow**
+
+The workflow uses the \`PLATFORM_GITHUB_TOKEN\` secret. The job output shows each
+step and flags any errors.
+
+---
+
+## Running locally
+
+\`\`\`bash
+# Authenticate the gh CLI with a PAT that has repo + admin:org + read:org scopes
+export GH_TOKEN=ghp_your_token_here
+
+# Dry run first — see what will happen without making changes
+bash setup/scripts/apply-repo-config.sh nautilus portal-infra setup/configs/product-team.json --dry-run
+
+# Apply for real
+bash setup/scripts/apply-repo-config.sh nautilus portal-infra setup/configs/product-team.json
+\`\`\`
+
+---
+
+## Onboarding a new product team repo
+
+Run the \`product-team\` config against the new repo, then complete the
+remaining secrets manually (these cannot be set via the setup script because
+they contain sensitive values):
+
+\`\`\`bash
+bash setup/scripts/apply-repo-config.sh nautilus portal-infra setup/configs/product-team.json
+\`\`\`
+
+After the script completes, add these secrets to the product team's repo manually:
+
+| Secret | Scope | Notes |
+|--------|-------|-------|
+| \`DEV_AZURE_CLIENT_ID\` | Actions | OIDC SP client ID for dev |
+| \`DEV_AZURE_SUBSCRIPTION_ID\` | Actions | Azure subscription ID for dev |
+| \`QA_AZURE_CLIENT_ID\` | Actions | OIDC SP client ID for QA |
+| \`QA_AZURE_SUBSCRIPTION_ID\` | Actions | Azure subscription ID for QA |
+| \`STAGE_AZURE_CLIENT_ID\` | Actions | OIDC SP client ID for staging |
+| \`STAGE_AZURE_SUBSCRIPTION_ID\` | Actions | Azure subscription ID for staging |
+| \`PROD_AZURE_CLIENT_ID\` | Actions | OIDC SP client ID for prod |
+| \`PROD_AZURE_SUBSCRIPTION_ID\` | Actions | Azure subscription ID for prod |
+| \`AZURE_TENANT_ID\` | Actions variable | Shared across all environments |
+| \`TF_MODULES_DEPLOY_KEY\` | Actions | Private half of the SSH deploy key |
+| \`DB_ADMIN_PASSWORD\` | Actions | PostgreSQL admin password |
+| \`LOG_WORKSPACE_ID\` | Actions | Log Analytics workspace resource ID |
+
+See [Product Team Maintenance — Onboarding](#platform-product-maintenance)
+for the full onboarding checklist, including OIDC federated credential configuration.
+
+---
+
+## Setting up a construct library repo
+
+Run the \`construct-library\` config, then add the \`REGISTRY_TOKEN\` secret scoped
+to the \`registry\` environment (not at the repo level):
+
+\`\`\`bash
+bash setup/scripts/apply-repo-config.sh nautilus nautilus-infra-python setup/configs/construct-library.json
+\`\`\`
+
+Then in the repo: **Settings → Environments → registry → Add secret → \`REGISTRY_TOKEN\`**
+
+The \`REGISTRY_TOKEN\` is the credential used by the \`publish\` job to push packages
+to the internal registry. Scoping it to the environment ensures it is only
+accessible after a platform team reviewer approves the publish job.
+
+---
+
+## Customising a config
+
+The JSON configs are templates. For one-off customisations (e.g. a different repo
+description, an extra label, or an additional reviewer team), edit a copy of the
+relevant config before running the script — do not modify the canonical configs in
+\`setup/configs/\` unless the change should apply to all future repos of that type.
+
+To add a new approved SKU label to a specific product team repo after initial
+setup, run the script again with an updated config — it will create new labels and
+update existing ones without touching other settings.
+
+---
+
+## What the script does not manage
+
+The following require manual action or a separate provisioning step:
+
+- **Creating the repository** — use \`gh repo create\` or the GitHub UI first
+- **GitHub Actions secrets** — secrets cannot be set via the \`gh api\` without
+  encryption; use \`gh secret set\` or the UI
+- **OIDC federated credentials on service principals** — set via \`az ad app federated-credential create\`
+- **Azure RBAC assignments** — handled by the platform team's Azure provisioning steps
+- **SSH deploy key generation** — see [Module Maintenance — Access control](#platform-module-maintenance)
+`
+  };
+
+  const PAGE_LIST = Object.keys(PAGES);
+  const contentEl = document.getElementById("content");
+  const sidebar   = document.getElementById("sidebar");
+
+  // Configure marked with highlight.js
+  marked.setOptions({
+    highlight(code, lang) {
+      if (lang && hljs.getLanguage(lang)) {
+        return hljs.highlight(code, { language: lang }).value;
+      }
+      return hljs.highlightAuto(code).value;
+    },
+    breaks: false,
+    gfm: true,
+  });
+
+  function loadPage(page) {
+    // Update sidebar active state
+    sidebar.querySelectorAll("a").forEach(a => {
+      a.classList.toggle("active", a.dataset.page === page);
+    });
+
+    var demoSection = document.getElementById("demo-section");
+
+    // Handle "demo" as a special non-markdown page
+    if (page === "demo") {
+      contentEl.style.display = "none";
+      demoSection.style.display = "block";
+      initDemoSlider();
+      window.scrollTo({ top: 0 });
+      document.title = "See it in action — Nautilus Docs";
+      sidebar.classList.remove("open");
+      return;
+    }
+
+    // All other pages: show content, hide demo
+    contentEl.style.display = "block";
+    demoSection.style.display = "none";
+
+    var md = PAGES[page];
+    if (!md) {
+      contentEl.innerHTML =
+        '<h1>Page not found</h1>' +
+        '<p>Could not load <code>' + page + '</code>.</p>' +
+        '<p><a href="#home">Go to home page</a></p>';
+      sidebar.classList.remove("open");
+      return;
+    }
+
+    contentEl.innerHTML = marked.parse(md);
+
+    // Apply syntax highlighting
+    contentEl.querySelectorAll("pre code:not(.hljs)").forEach(function(el) {
+      hljs.highlightElement(el);
+    });
+
+    window.scrollTo({ top: 0 });
+
+    var h1 = contentEl.querySelector("h1");
+    document.title = h1
+      ? h1.textContent + " — Nautilus Docs"
+      : "Nautilus Documentation";
+
+    sidebar.classList.remove("open");
+  }
+
+  function toggleSidebar() {
+    sidebar.classList.toggle("open");
+  }
+
+  // Close sidebar when clicking outside on mobile
+  document.addEventListener("click", (e) => {
+    if (window.innerWidth <= 900 &&
+        !sidebar.contains(e.target) &&
+        !e.target.classList.contains("menu-toggle")) {
+      sidebar.classList.remove("open");
+    }
+  });
+
+  // Handle sidebar link clicks
+  sidebar.addEventListener("click", (e) => {
+    const link = e.target.closest("a[data-page]");
+    if (!link) return;
+    e.preventDefault();
+    const page = link.dataset.page;
+    window.location.hash = page;
+  });
+
+  // Handle hash changes
+  function onHashChange() {
+    let page = window.location.hash.replace("#", "") || "home";
+    if (page !== "demo" && !PAGE_LIST.includes(page)) page = "home";
+    loadPage(page);
+  }
+
+  window.addEventListener("hashchange", onHashChange);
+  onHashChange();
+
+  // ── Demo slider ──────────────────────────────────────────────────────────
+  // Steps are static HTML in #demo-section above. This array is unused.
+  const _DEMO_STEPS_UNUSED = [
+    {
+      title: "Developer writes a stack",
+      sub: "A product team developer installs the construct library and writes infrastructure as code in their language of choice. No HCL required.",
+      file: "main.py",
+      lang: "python",
+      code: `from nautilus_infra import BaseAzureStack
+from nautilus_infra.constructs import (
+    NetworkConstruct, DatabaseConstruct
+)
+
+class PortalStack(BaseAzureStack):
+    def __init__(self, scope, id):
+        super().__init__(scope, id,
+            project="portal",
+            environment="dev",
+            location="eastus",
+        )
+
+        net = NetworkConstruct(self, "network",
+            project="portal",
+            environment="dev",
+            resource_group="portal-dev-rg",
+            location="eastus",
+            address_space=["10.0.0.0/16"],
+            subnets={"app": SubnetConfig("10.0.1.0/24")},
+        )
+
+        DatabaseConstruct(self, "db",
+            project="portal",
+            environment="dev",
+            resource_group="portal-dev-rg",
+            location="eastus",
+            subnet_id=net.subnet_ids["app"],
+            dns_zone_id=net.dns_zone_ids["postgres"],
+            admin_password=os.environ["DB_PASSWORD"],
+        )`,
+    },
+    {
+      title: "PR triggers validation",
+      sub: "The developer opens a pull request. The reusable workflow pipeline kicks in automatically — formatting, validation, and change detection.",
+      file: ".github/workflows/infra.yml",
+      lang: "yaml",
+      code: `name: Infrastructure
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    uses: nautilus/reusable-workflows/.github/workflows/tf-validate.yml@v1.4.0
+
+  changes:
+    if: github.event_name == 'pull_request'
+    uses: nautilus/reusable-workflows/.github/workflows/tf-changes.yml@v1.4.0
+
+  plan:
+    needs: [validate, changes]
+    if: github.event_name == 'pull_request'
+    uses: nautilus/reusable-workflows/.github/workflows/tf-plan.yml@v1.4.0
+    with:
+      environments: \${{ needs.changes.outputs.affected }}`,
+    },
+    {
+      title: "OPA policies gate the plan",
+      sub: "Every terraform plan is evaluated against the full OPA policy suite. Public resources, unauthorized network changes, missing tags — all blocked before apply.",
+      file: "policy/deny_public_resources.rego",
+      lang: "text",
+      code: `package nautilus.deny
+
+import rego.v1
+
+# Deny any resource that exposes a public IP or public endpoint.
+# This policy applies to ALL environments, including dev.
+
+deny contains msg if {
+    some resource in input.resource_changes
+    resource.change.after.public_network_access_enabled == true
+    msg := sprintf(
+        "Resource '%s' enables public network access. "
+        "All resources must use private endpoints. "
+        "See: developer-guide#networking-rules",
+        [resource.address]
+    )
+}
+
+deny contains msg if {
+    some resource in input.resource_changes
+    resource.type == "azurerm_public_ip"
+    msg := sprintf(
+        "Resource '%s' creates a public IP. "
+        "Public IPs are not allowed in any environment.",
+        [resource.address]
+    )
+}
+
+# ✓ Plan passed — 0 violations`,
+    },
+    {
+      title: "Plan posted to the PR",
+      sub: "The pipeline comments the full plan diff and policy results directly on the pull request. Reviewers see exactly what will change before approving.",
+      file: "PR comment",
+      lang: "text",
+      code: `🐚 Nautilus Plan — portal / dev
+
+Terraform will perform the following actions:
+
+  # module.network.azurerm_virtual_network.this
+  + resource "azurerm_virtual_network" "this" {
+      + name                = "portal-dev-vnet"
+      + address_space       = ["10.0.0.0/16"]
+      + location            = "eastus"
+      + resource_group_name = "portal-dev-rg"
+      + tags = {
+          + "managed_by"  = "terraform"
+          + "project"     = "portal"
+          + "environment" = "dev"
+        }
+    }
+
+  # module.db.azurerm_postgresql_flexible_server.this
+  + resource "azurerm_postgresql_flexible_server" "this" {
+      + name    = "portal-dev-psql"
+      + sku     = "GP_Standard_D2s_v3"
+      + version = "15"
+    }
+
+Plan: 6 to add, 0 to change, 0 to destroy.
+OPA: ✓ All policies passed (6 rules evaluated)`,
+    },
+    {
+      title: "Merge triggers deploy",
+      sub: "After approval, the PR is merged. The deploy pipeline applies changes environment by environment — dev and QA automatically, stage and prod with platform team approval.",
+      file: "deploy pipeline",
+      lang: "text",
+      code: `🐚 Nautilus Deploy — portal
+
+━━━ dev ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ✓ terraform plan    6 to add
+  ✓ OPA policy check  passed
+  ✓ terraform apply   6 added, 0 changed
+  ✓ artifact saved    plan-portal-dev-a3f8c21
+
+━━━ qa ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ✓ terraform plan    6 to add
+  ✓ OPA policy check  passed
+  ✓ terraform apply   6 added, 0 changed
+  ✓ artifact saved    plan-portal-qa-a3f8c21
+
+━━━ stage ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ⏳ waiting for approval ...
+     environment: stage
+     required reviewer: @platform-infra
+     wait timer: 10 minutes
+
+━━━ prod ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ○ blocked by: stage`,
+    },
+    {
+      title: "Resources protected in Azure",
+      sub: "Once applied, Azure Policy enforces constraints at the ARM API level and management locks prevent accidental deletion. Drift detection runs daily.",
+      file: "Azure portal",
+      lang: "text",
+      code: `Resource Group: portal-dev-rg
+Location:       East US
+Subscription:   portal-dev
+
+┌─────────────────────────────────────────────┐
+│ Resources                                   │
+├─────────────────────────────────────────────┤
+│ ✓ portal-dev-vnet          Virtual Network  │
+│ ✓ portal-dev-app-nsg       Network Security │
+│ ✓ portal-dev-app           Subnet           │
+│ ✓ portal-dev-psql          PostgreSQL       │
+│ ✓ portal-dev-dns           Private DNS Zone │
+│ ✓ portal-dev-vnet-link     DNS VNet Link    │
+├─────────────────────────────────────────────┤
+│ Management locks (staging + prod):          │
+│   🔒 CanNotDelete on all resources          │
+│                                             │
+│ Azure Policy:                               │
+│   ✓ deny-public-access        enforced      │
+│   ✓ deny-network-outside-dev  enforced      │
+│   ✓ require-tags              enforced      │
+│                                             │
+│ Drift detection:                            │
+│   🕐 Daily scan — next run in 14h           │
+│   Last result: ✓ No drift detected          │
+└─────────────────────────────────────────────┘`,
+    },
+  ];
+
+  var demoInitialized = false;
+  function initDemoSlider() {
+    if (demoInitialized) return;
+    demoInitialized = true;
+
+    // Highlight code blocks in the slider (guard against hljs not loaded yet)
+    if (typeof hljs !== "undefined") {
+      document.querySelectorAll("#demo-section pre code").forEach(function(el) {
+        hljs.highlightElement(el);
+      });
+    }
+
+    var track = document.getElementById("demo-track");
+    var steps = track.querySelectorAll(".demo-step");
+    var dots  = document.querySelectorAll("#demo-dots .demo-dot-nav");
+    var prev  = document.getElementById("demo-prev");
+    var next  = document.getElementById("demo-next");
+    var total = steps.length;
+    var current = 0;
+
+    console.log("[demo] track:", track);
+    console.log("[demo] steps found:", total);
+    console.log("[demo] prev:", prev);
+    console.log("[demo] next:", next);
+    console.log("[demo] dots:", dots.length);
+
+    function goTo(i) {
+      console.log("[demo] goTo", i, "from", current);
+      if (i < 0 || i >= total) return;
+      current = i;
+      track.style.transform = "translateX(-" + (current * 100) + "%)";
+      dots.forEach(function(d, j) {
+        d.classList.toggle("active", j === current);
+      });
+      prev.disabled = (current === 0);
+      if (current === total - 1) {
+        next.innerHTML = "Done &#10003;";
+        next.disabled = true;
+      } else {
+        next.innerHTML = "Next &#8594;";
+        next.disabled = false;
+      }
+    }
+
+    prev.onclick = function(e) { e.preventDefault(); goTo(current - 1); };
+    next.onclick = function(e) { e.preventDefault(); goTo(current + 1); };
+    dots.forEach(function(dot) {
+      dot.onclick = function(e) { e.preventDefault(); goTo(+dot.dataset.i); };
+    });
+
+    // Reset to step 0
+    goTo(0);
+  }
+</script>
+
+</body>
+</html>
