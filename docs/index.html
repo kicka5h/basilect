@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nautilus Documentation</title>
-  <meta name="description" content="Complete reference documentation for the Nautilus self-service Azure IaC platform." />
+  <title>Basilect — Self-Service Azure IaC Platform</title>
+  <meta name="description" content="Basilect is a self-service Azure IaC platform for platform teams. Currently in development — request early access." />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11/styles/github-dark-dimmed.min.css" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -381,6 +381,162 @@
     }
     .demo-arrow:hover { border-color: var(--teal); color: var(--teal); }
 
+    /* ── Landing page ── */
+    .landing {
+      display: none;
+      min-height: calc(100vh - var(--nav-h));
+      padding: 4rem 2rem;
+      text-align: center;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+    .landing.visible { display: block; }
+    .landing-badge {
+      display: inline-block;
+      padding: 0.35rem 1rem;
+      border-radius: 20px;
+      border: 1px solid var(--teal-dim);
+      color: var(--teal);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+    .landing h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+    }
+    .landing h1 span { color: var(--teal); }
+    .landing-sub {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 600px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.7;
+    }
+    .landing-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 1.25rem;
+      text-align: left;
+      margin-bottom: 3rem;
+    }
+    .landing-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+    }
+    .landing-card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+    .landing-card p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin: 0;
+    }
+    .landing-cta {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+    .landing-btn {
+      display: inline-block;
+      padding: 0.75rem 2rem;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .landing-btn:hover { text-decoration: none; }
+    .landing-btn-primary {
+      background: var(--teal);
+      color: #000;
+    }
+    .landing-btn-primary:hover { opacity: 0.88; color: #000; }
+    .landing-btn-secondary {
+      background: transparent;
+      color: var(--teal);
+      border: 1px solid var(--teal-dim);
+    }
+    .landing-btn-secondary:hover { border-color: var(--teal); color: var(--white); }
+    .landing-notice {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-top: 1rem;
+    }
+
+    /* ── Request Access page ── */
+    .request-access {
+      display: none;
+      min-height: calc(100vh - var(--nav-h));
+      padding: 4rem 2rem;
+      max-width: 660px;
+      margin: 0 auto;
+    }
+    .request-access.visible { display: block; }
+    .request-access h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 0.75rem;
+    }
+    .request-access p {
+      color: var(--text);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+    .request-access .notice-box {
+      background: rgba(232, 185, 60, 0.08);
+      border: 1px solid rgba(232, 185, 60, 0.25);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .request-access .notice-box p { color: var(--yellow); margin-bottom: 0.5rem; }
+    .request-access .notice-box p:last-child { margin-bottom: 0; }
+    .request-access .email-box {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .request-access .email-box p { color: var(--muted); margin-bottom: 0.75rem; }
+    .request-access .email-link {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--teal);
+    }
+    .request-access h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--white);
+      margin: 2rem 0 0.75rem;
+    }
+    .request-access ul {
+      padding-left: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .request-access li {
+      margin-bottom: 0.4rem;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
     @media (max-width: 900px) {
       .sidebar {
         transform: translateX(-100%);
@@ -392,6 +548,9 @@
       .menu-toggle { display: block; }
       .demo-step { padding: 1.5rem 1.25rem; }
       #demo-section { margin-left: 0 !important; padding: 0 1.5rem 2rem !important; }
+      .landing h1 { font-size: 2rem; }
+      .landing { padding: 2.5rem 1.5rem; }
+      .request-access { padding: 2.5rem 1.5rem; }
     }
   </style>
 </head>
@@ -401,16 +560,92 @@
 <nav class="topnav">
   <div style="display:flex; align-items:center; gap:1rem;">
     <button class="menu-toggle" onclick="toggleSidebar()" aria-label="Toggle menu">&#9776;</button>
-    <a class="topnav-brand" href="index.html">&#x1F41A; Nautilus</a>
+    <a class="topnav-brand" href="#landing">Basilect</a>
   </div>
   <ul class="topnav-links">
-    <li><a href="#home">Home</a></li>
-    <li><a href="https://github.com/kicka5h/project-nautilus">GitHub</a></li>
+    <li><a href="#landing">Home</a></li>
+    <li><a href="#request-access">Request Early Access</a></li>
   </ul>
 </nav>
 
+<!-- ── Landing page ── -->
+<div class="landing" id="landing-page">
+  <div class="landing-badge">In Active Development</div>
+  <h1>Self-service Azure IaC,<br><span>built for platform teams.</span></h1>
+  <p class="landing-sub">
+    Basilect gives platform teams an opinionated, end-to-end framework for self-service
+    Azure infrastructure. Product teams write a CDKTF stack in any of five languages &mdash;
+    the platform owns everything beneath: Terraform modules, CI/CD pipelines, OPA policies,
+    Azure Policy governance, state backends, and service principals.
+  </p>
+
+  <div class="landing-cards">
+    <div class="landing-card">
+      <h3>Multi-language constructs</h3>
+      <p>Python, TypeScript, C#, Java, and Go. Product teams pick their language; the platform team maintains one set of modules.</p>
+    </div>
+    <div class="landing-card">
+      <h3>Layered enforcement</h3>
+      <p>OPA policies gate every plan. Azure Policy enforces at the ARM level. Management locks protect stateful resources.</p>
+    </div>
+    <div class="landing-card">
+      <h3>Zero static credentials</h3>
+      <p>All authentication uses OIDC workload identity federation. No secrets stored in CI.</p>
+    </div>
+  </div>
+
+  <div class="landing-cta">
+    <a class="landing-btn landing-btn-primary" href="#home">View Documentation</a>
+    <a class="landing-btn landing-btn-secondary" href="#request-access">Request Early Access</a>
+  </div>
+  <p class="landing-notice">
+    Basilect is currently in development. Source code access is available by request &mdash;
+    email <a href="mailto:karczag.ashley@gmail.com">karczag.ashley@gmail.com</a>.
+  </p>
+</div>
+
+<!-- ── Request Early Access page ── -->
+<div class="request-access" id="request-access-page">
+  <h1>Request Early Access</h1>
+  <div class="notice-box">
+    <p><strong>Basilect is currently in active development.</strong></p>
+    <p>The platform may not behave as expected in all scenarios. APIs, constructs, and pipeline behaviour are subject to change without notice as the project matures.</p>
+  </div>
+  <p>
+    Basilect is <strong>completely free</strong> to set up and use in testing environments.
+    There are no license fees, usage limits, or commercial restrictions during the development phase.
+  </p>
+
+  <div class="email-box">
+    <p>To request access to the source code, email:</p>
+    <a class="email-link" href="mailto:karczag.ashley@gmail.com">karczag.ashley@gmail.com</a>
+  </div>
+
+  <h2>Looking for contributors</h2>
+  <p>
+    Basilect is actively looking for contributors. If you have experience with any of the following,
+    we'd love to hear from you:
+  </p>
+  <ul>
+    <li>Terraform module development and testing</li>
+    <li>CDKTF / construct library development in any of the five supported languages</li>
+    <li>GitHub Actions reusable workflows</li>
+    <li>OPA / Rego policy authoring</li>
+    <li>Azure platform engineering and governance</li>
+    <li>Documentation and developer experience</li>
+  </ul>
+  <p>
+    Include a brief description of your background and what areas interest you when you email.
+    All skill levels are welcome.
+  </p>
+
+  <div style="margin-top: 2.5rem;">
+    <a class="landing-btn landing-btn-secondary" href="#home">View Documentation</a>
+  </div>
+</div>
+
 <!-- ── Layout ── -->
-<div class="layout">
+<div class="layout" style="display:none">
 
   <!-- ── Sidebar ── -->
   <aside class="sidebar" id="sidebar">
@@ -455,8 +690,8 @@
             <div class="demo-step-sub">A product team developer installs the construct library and writes infrastructure as code in their language of choice. No HCL required.</div>
             <div class="demo-code">
               <div class="demo-code-bar"><div class="demo-dot"></div><div class="demo-dot"></div><div class="demo-dot"></div><span class="demo-code-file">main.py</span></div>
-              <pre><code class="python">from nautilus_infra import BaseAzureStack
-from nautilus_infra.constructs import (
+              <pre><code class="python">from basilect_infra import BaseAzureStack
+from basilect_infra.constructs import (
     NetworkConstruct, DatabaseConstruct, SubnetConfig
 )
 
@@ -506,16 +741,16 @@ on:
 
 jobs:
   validate:
-    uses: nautilus/reusable-workflows/.github/workflows/tf-validate.yml@v1.4.0
+    uses: basilect/reusable-workflows/.github/workflows/tf-validate.yml@v1.4.0
 
   changes:
     if: github.event_name == 'pull_request'
-    uses: nautilus/reusable-workflows/.github/workflows/tf-changes.yml@v1.4.0
+    uses: basilect/reusable-workflows/.github/workflows/tf-changes.yml@v1.4.0
 
   plan:
     needs: [validate, changes]
     if: github.event_name == 'pull_request'
-    uses: nautilus/reusable-workflows/.github/workflows/tf-plan.yml@v1.4.0
+    uses: basilect/reusable-workflows/.github/workflows/tf-plan.yml@v1.4.0
     with:
       environments: ${{ needs.changes.outputs.affected }}</code></pre>
             </div>
@@ -529,7 +764,7 @@ jobs:
             <div class="demo-step-sub">Every terraform plan is evaluated against the full OPA policy suite. Public resources, unauthorized network changes, missing tags — all blocked before apply.</div>
             <div class="demo-code">
               <div class="demo-code-bar"><div class="demo-dot"></div><div class="demo-dot"></div><div class="demo-dot"></div><span class="demo-code-file">policy/deny_public_resources.rego</span></div>
-              <pre><code class="text">package nautilus.deny
+              <pre><code class="text">package basilect.deny
 
 import rego.v1
 
@@ -565,7 +800,7 @@ deny contains msg if {
             <div class="demo-step-sub">The pipeline comments the full plan diff and policy results directly on the pull request. Reviewers see exactly what will change before approving.</div>
             <div class="demo-code">
               <div class="demo-code-bar"><div class="demo-dot"></div><div class="demo-dot"></div><div class="demo-dot"></div><span class="demo-code-file">PR comment</span></div>
-              <pre><code class="text">🐚 Nautilus Plan — portal / dev
+              <pre><code class="text">Basilect Plan — portal / dev
 
 Terraform will perform the following actions:
 
@@ -602,7 +837,7 @@ OPA: ✓ All policies passed (6 rules evaluated)</code></pre>
             <div class="demo-step-sub">After approval, the PR is merged. The deploy pipeline applies changes environment by environment — dev and QA automatically, stage and prod with platform team approval.</div>
             <div class="demo-code">
               <div class="demo-code-bar"><div class="demo-dot"></div><div class="demo-dot"></div><div class="demo-dot"></div><span class="demo-code-file">deploy pipeline</span></div>
-              <pre><code class="text">🐚 Nautilus Deploy — portal
+              <pre><code class="text">Basilect Deploy — portal
 
 ━━━ dev ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   ✓ terraform plan    6 to add
@@ -697,9 +932,9 @@ Location:       East US
 <script src="https://cdn.jsdelivr.net/npm/highlight.js@11/languages/yaml.min.js"></script>
 <script>
   const PAGES = {
-  "home": `# Project Nautilus
+  "home": `# Basilect
 
-Nautilus is a self-service IaC platform for Azure. Platform teams adopt it to give product teams a safe, opinionated path to provisioning their own infrastructure — without exposing raw Terraform, state, or credentials to application developers.
+Basilect is a self-service IaC platform for Azure. Platform teams adopt it to give product teams a safe, opinionated path to provisioning their own infrastructure — without exposing raw Terraform, state, or credentials to application developers.
 
 Product teams write a CDKTF stack in any of five languages (Python, TypeScript, C#, Java, Go). The platform team owns everything beneath that abstraction: the Terraform modules, construct libraries, CI/CD pipelines, OPA policies, Azure Policy governance, state backend, and service principals.
 
@@ -709,9 +944,9 @@ This repository is the reference implementation. Fork it and adapt it to your or
 
 ## What problem this solves
 
-Product teams need infrastructure — and they need it when they need it, not weeks later after a ticketing process. Nautilus gives developers a self-service path to provision their own resources just-in-time, without waiting on the platform team for every change.
+Product teams need infrastructure — and they need it when they need it, not weeks later after a ticketing process. Basilect gives developers a self-service path to provision their own resources just-in-time, without waiting on the platform team for every change.
 
-The risk of self-service is drift, misconfiguration, and accidental destruction in production. Nautilus addresses this through layered enforcement: OPA policies gate every plan before apply, Azure Policy enforces constraints at the ARM API level, and management locks protect stateful resources from deletion outside a supervised process. Developers move fast inside a well-defined boundary; the platform team defines and maintains that boundary rather than manually approving every change.
+The risk of self-service is drift, misconfiguration, and accidental destruction in production. Basilect addresses this through layered enforcement: OPA policies gate every plan before apply, Azure Policy enforces constraints at the ARM API level, and management locks protect stateful resources from deletion outside a supervised process. Developers move fast inside a well-defined boundary; the platform team defines and maintains that boundary rather than manually approving every change.
 
 ---
 
@@ -753,7 +988,7 @@ Authentication is OIDC throughout — no static credentials are stored anywhere.
 Run the interactive setup wizard — it handles repo creation, branch protection, team setup, code push, and optionally the Azure bootstrap in a single guided session:
 
 \`\`\`bash
-bash <(curl -fsSL https://raw.githubusercontent.com/nautilus/project-nautilus/main/setup/nautilus.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/basilect/basilect/main/setup/basilect.sh)
 \`\`\`
 
 **Prerequisites:** \\\`gh\\\` CLI, \\\`jq\\\`, \\\`git\\\`. Terraform is optional (needed for Azure bootstrap).
@@ -762,7 +997,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/nautilus/project-nautilus/ma
 
 ## Prerequisites
 
-Before implementing Nautilus, your organization needs:
+Before implementing Basilect, your organization needs:
 
 **GitHub**
 - A GitHub organization with Actions enabled
@@ -836,7 +1071,7 @@ Before implementing Nautilus, your organization needs:
                            ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │  infra.yml  (thin calling workflow in each product repo)        │
-│  Delegates to nautilus/reusable-workflows:                         │
+│  Delegates to basilect/reusable-workflows:                         │
 │                                                                  │
 │  tf-validate  →  fmt-check + init -backend=false + validate     │
 │  tf-changes   →  detect which env folders changed (PR only)     │
@@ -850,7 +1085,7 @@ Before implementing Nautilus, your organization needs:
                            │  module source via SSH deploy key
                            ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│  terraform-modules  (nautilus/terraform-modules — private)         │
+│  terraform-modules  (basilect/terraform-modules — private)         │
 │                                                                  │
 │  modules/networking          modules/database/postgres           │
 │  modules/compute/aks         governance/                        │
@@ -944,7 +1179,7 @@ GitHub Actions runner
 │
 └── TF_MODULES_DEPLOY_KEY  (SSH deploy key, read-only, per product repo)
     → loaded by webfactory/ssh-agent before \`terraform init\`
-    → allows Terraform to clone git::ssh://git@github.com/nautilus/terraform-modules.git
+    → allows Terraform to clone git::ssh://git@github.com/basilect/terraform-modules.git
 \`\`\`
 
 Each product team gets a service principal per environment with a federated
@@ -983,11 +1218,11 @@ for how to release it.
 The construct libraries pin an explicit Git tag when sourcing each Terraform module:
 
 \`\`\`
-git::ssh://git@github.com/nautilus/terraform-modules.git//modules/networking?ref=v1.4.0
+git::ssh://git@github.com/basilect/terraform-modules.git//modules/networking?ref=v1.4.0
 \`\`\`
 
 The construct library package version and the module tag it references are always
-identical. Releasing \`nautilus-infra==1.5.0\` requires cutting \`v1.5.0\` in the module
+identical. Releasing \`basilect-infra==1.5.0\` requires cutting \`v1.5.0\` in the module
 repo first and updating the source strings in all five language libraries.
 
 Product teams upgrade by changing one line in their dependency file. The module
@@ -1061,7 +1296,7 @@ independently and a validate pass is not needed.
 
 The \`bootstrap/\` directory contains Terraform that provisions the Azure and Azure
 AD resources the platform depends on before any product team infrastructure can
-be deployed. Run these once when first implementing Nautilus, then once per new
+be deployed. Run these once when first implementing Basilect, then once per new
 product team during onboarding.
 
 \`\`\`
@@ -1080,7 +1315,7 @@ Before running bootstrap you need:
   - Owner on the platform subscription (to create RBAC assignments)
   - Global Administrator or Application Administrator in Azure AD (to create applications and service principals)
 - **Terraform ≥ 1.7** installed locally
-- The \`github_org\` and \`github_repo\` for the Nautilus platform repo
+- The \`github_org\` and \`github_repo\` for the Basilect platform repo
 
 ---
 
@@ -1096,8 +1331,8 @@ Run this once to create the shared Azure infrastructure the entire platform depe
 | \`azurerm_storage_account\` | Terraform state backend (\`platformtfstate\`) |
 | \`azurerm_storage_container\` | \`tfstate\` container within the account |
 | \`azurerm_management_lock\` | Protects the state account from accidental deletion |
-| \`azuread_application\` + SP | Platform service principal (\`nautilus-platform\`) |
-| \`azuread_application_federated_identity_credential\` | OIDC credential scoped to the Nautilus repo's main branch |
+| \`azuread_application\` + SP | Platform service principal (\`basilect-platform\`) |
+| \`azuread_application_federated_identity_credential\` | OIDC credential scoped to the Basilect repo's main branch |
 | \`azurerm_role_assignment\` × 2 | Contributor on platform subscription; Storage Blob Data Contributor on state account |
 
 ### Apply
@@ -1115,14 +1350,14 @@ terraform init
 # Review the plan
 terraform plan \\
   -var="platform_subscription_id=<platform-subscription-id>" \\
-  -var="github_org=nautilus" \\
-  -var="github_repo=project-nautilus"
+  -var="github_org=basilect" \\
+  -var="github_repo=basilect"
 
 # Apply
 terraform apply \\
   -var="platform_subscription_id=<platform-subscription-id>" \\
-  -var="github_org=nautilus" \\
-  -var="github_repo=project-nautilus"
+  -var="github_org=basilect" \\
+  -var="github_repo=basilect"
 \`\`\`
 
 ### Read the outputs
@@ -1135,7 +1370,7 @@ terraform output state_storage_account_id   # needed for product-team bootstrap
 terraform output tenant_id                  # AZURE_TENANT_ID variable
 \`\`\`
 
-Set the GitHub Actions secrets and variables on the Nautilus repo as instructed.
+Set the GitHub Actions secrets and variables on the Basilect repo as instructed.
 
 ### Optional: migrate local state to the remote backend
 
@@ -1183,7 +1418,7 @@ terraform init \\
 
 terraform plan \\
   -var="product_name=portal" \\
-  -var="github_org=nautilus" \\
+  -var="github_org=basilect" \\
   -var="github_repo=portal-infra" \\
   -var='subscription_ids={"dev":"<dev-sub-id>","qa":"<qa-sub-id>","stage":"<stage-sub-id>","prod":"<prod-sub-id>"}' \\
   -var="state_storage_account_id=<state_storage_account_id from platform output>" \\
@@ -1215,17 +1450,17 @@ Set them via \`gh secret set\` or the GitHub UI:
 \`\`\`bash
 # SSH deploy key for terraform-modules
 gh secret set TF_MODULES_DEPLOY_KEY \\
-  --repo nautilus/portal-infra \\
+  --repo basilect/portal-infra \\
   --body "$(cat /path/to/tf_modules_key)"
 
 # PostgreSQL admin password
 gh secret set DB_ADMIN_PASSWORD \\
-  --repo nautilus/portal-infra \\
+  --repo basilect/portal-infra \\
   --body "$(openssl rand -base64 32)"
 
 # Log Analytics workspace resource ID
 gh secret set LOG_WORKSPACE_ID \\
-  --repo nautilus/portal-infra \\
+  --repo basilect/portal-infra \\
   --body "/subscriptions/.../workspaces/platform-logs"
 \`\`\`
 
@@ -1281,7 +1516,7 @@ produces no changes unless variables have changed. This makes them safe to rerun
 `,
   "developer-guide": `# Developer Interface Reference
 
-This document describes the interface Nautilus exposes to product teams. It covers
+This document describes the interface Basilect exposes to product teams. It covers
 what they can build, what the platform enforces, and how to support them when
 things go wrong. Share this document with product teams during onboarding.
 
@@ -1307,11 +1542,11 @@ platform team and not visible to product teams.
 
 | Language | Package | Registry |
 |----------|---------|---------|
-| Python | \`nautilus-infra\` | Internal PyPI |
-| TypeScript | \`@nautilus/infra\` | Internal npm |
-| C# | \`Nautilus.Infra\` | Internal NuGet |
-| Java | \`com.nautilus:infra\` | Internal Maven |
-| Go | \`github.com/nautilus/infra-go\` | Internal Go proxy |
+| Python | \`basilect-infra\` | Internal PyPI |
+| TypeScript | \`@basilect/infra\` | Internal npm |
+| C# | \`Basilect.Infra\` | Internal NuGet |
+| Java | \`com.basilect:infra\` | Internal Maven |
+| Go | \`github.com/basilect/infra-go\` | Internal Go proxy |
 
 All five produce identical Terraform JSON. The synthesized output is what the
 pipeline operates on.
@@ -1636,8 +1871,8 @@ for the full procedure.
 `,
   "platform-module-maintenance": `# Module Maintenance
 
-How the platform team manages \`nautilus/terraform-modules\` — the private Terraform
-module library that backs every Nautilus construct.
+How the platform team manages \`basilect/terraform-modules\` — the private Terraform
+module library that backs every Basilect construct.
 
 ---
 
@@ -1824,7 +2059,7 @@ resource "azurerm_management_lock" "this" {
   name       = "\${local.name_prefix}-lock"
   scope      = azurerm_<resource>.this.id
   lock_level = "CanNotDelete"
-  notes      = "Managed by Nautilus. Remove via supervised decommission only."
+  notes      = "Managed by Basilect. Remove via supervised decommission only."
 }
 \`\`\`
 
@@ -1864,7 +2099,7 @@ A new module is not useful until it has a CDKTF construct. Create a new construc
 file in each library under \`constructs/\` following the existing patterns. Update
 exports:
 
-- **Python**: \`nautilus_infra/constructs/__init__.py\` and \`nautilus_infra/__init__.py\`
+- **Python**: \`basilect_infra/constructs/__init__.py\` and \`basilect_infra/__init__.py\`
 - **TypeScript**: \`src/index.ts\`
 - **C#**: add a new class file (no explicit export needed)
 - **Java**: add a new class file (no explicit export needed)
@@ -1943,7 +2178,7 @@ is wired correctly. Run them when changing module variable or output names.
 \`\`\`bash
 cd constructs/python && pip install -e ".[dev]" && pytest tests/ -v
 cd constructs/typescript && npm install && npm test
-cd constructs/csharp && dotnet test Nautilus.Infra.Tests/
+cd constructs/csharp && dotnet test Basilect.Infra.Tests/
 cd constructs/java && mvn test --batch-mode
 cd constructs/go && go test ./...
 \`\`\`
@@ -1993,9 +2228,9 @@ Before tagging, update the module source string in each affected construct file
 across all five libraries and bump each package version to match:
 
 \`\`\`python
-# Python — constructs/python/nautilus_infra/constructs/network.py
+# Python — constructs/python/basilect_infra/constructs/network.py
 _MODULE_SOURCE = (
-    "git::ssh://git@github.com/nautilus/terraform-modules.git"
+    "git::ssh://git@github.com/basilect/terraform-modules.git"
     "//modules/networking?ref=v1.5.0"
 )
 \`\`\`
@@ -2003,7 +2238,7 @@ _MODULE_SOURCE = (
 \`\`\`typescript
 // TypeScript — constructs/typescript/src/network.ts
 const NETWORK_MODULE_SOURCE =
-  "git::ssh://git@github.com/nautilus/terraform-modules.git" +
+  "git::ssh://git@github.com/basilect/terraform-modules.git" +
   "//modules/networking?ref=v1.5.0";
 \`\`\`
 
@@ -2023,11 +2258,11 @@ uploaded.
 
 | Language | Registry | Publish mechanism | Secret |
 |----------|---------|-------------------|--------|
-| Python | Internal PyPI (\`pkgs.nautilus.internal\`) | \`twine upload\` with \`__token__\` auth | \`REGISTRY_TOKEN\` |
-| TypeScript | Internal npm (\`npm.nautilus.internal\`) | \`npm publish\` via \`NODE_AUTH_TOKEN\` | \`REGISTRY_TOKEN\` |
-| Java | Internal Maven (\`maven.nautilus.internal\`) | \`mvn deploy\` with server credentials | \`REGISTRY_TOKEN\` |
-| C# | Internal NuGet (\`nuget.nautilus.internal\`) | \`dotnet nuget push\` with API key | \`REGISTRY_TOKEN\` |
-| Go | Internal Go proxy (\`goproxy.nautilus.internal\`) | Proxy cache warmed via HTTP request | \`REGISTRY_TOKEN\` |
+| Python | Internal PyPI (\`pkgs.basilect.internal\`) | \`twine upload\` with \`__token__\` auth | \`REGISTRY_TOKEN\` |
+| TypeScript | Internal npm (\`npm.basilect.internal\`) | \`npm publish\` via \`NODE_AUTH_TOKEN\` | \`REGISTRY_TOKEN\` |
+| Java | Internal Maven (\`maven.basilect.internal\`) | \`mvn deploy\` with server credentials | \`REGISTRY_TOKEN\` |
+| C# | Internal NuGet (\`nuget.basilect.internal\`) | \`dotnet nuget push\` with API key | \`REGISTRY_TOKEN\` |
+| Go | Internal Go proxy (\`goproxy.basilect.internal\`) | Proxy cache warmed via HTTP request | \`REGISTRY_TOKEN\` |
 
 Go is different from the other four: Go modules are versioned by git tag, not a
 package manifest. The publish job warms the internal Athens proxy cache by
@@ -2050,7 +2285,7 @@ ensures it is only accessible to the publish job and only after a reviewer appro
 
 ## Access control
 
-The \`nautilus/terraform-modules\` repo is private.
+The \`basilect/terraform-modules\` repo is private.
 
 | GitHub team | Access |
 |-------------|--------|
@@ -2064,7 +2299,7 @@ Each product repo has its own deploy key — keys are not shared across repos.
 
 \`\`\`bash
 # Generate a key pair (no passphrase)
-ssh-keygen -t ed25519 -C "github-actions@nautilus/<product>-infra" -f /tmp/tf_modules_key
+ssh-keygen -t ed25519 -C "github-actions@basilect/<product>-infra" -f /tmp/tf_modules_key
 
 # Add public key as a read-only deploy key on the terraform-modules repo:
 #   Settings → Deploy keys → Add deploy key → Allow write access: NO
@@ -2079,11 +2314,11 @@ Rotate deploy keys annually and immediately on suspected compromise.
 
 ## Releasing reusable workflows
 
-The \`nautilus/reusable-workflows\` repo is versioned independently from the Terraform
+The \`basilect/reusable-workflows\` repo is versioned independently from the Terraform
 modules. Calling workflows (\`infra.yml\`) pin a specific tag:
 
 \`\`\`yaml
-uses: nautilus/reusable-workflows/.github/workflows/tf-plan.yml@v1.0.0
+uses: basilect/reusable-workflows/.github/workflows/tf-plan.yml@v1.0.0
 \`\`\`
 
 ### When to cut a new release
@@ -2192,7 +2427,7 @@ To remove a lock for a supervised decommission, see
 `,
   "platform-product-maintenance": `# Product Team Maintenance
 
-How the platform team supports product teams that run on Nautilus: reviewing
+How the platform team supports product teams that run on Basilect: reviewing
 their PRs, managing state, handling incidents, onboarding new teams, and
 coordinating module upgrades.
 
@@ -2590,7 +2825,7 @@ Never leave drift unresolved across multiple apply cycles. It compounds.
 - [ ] Add the SP details as GitHub Actions secrets on the team's repo:
   \`ARM_CLIENT_ID\`, \`ARM_SUBSCRIPTION_ID\` (per env prefix), and the shared
   \`ARM_TENANT_ID\` repo variable.
-- [ ] Generate a read-only SSH deploy key for \`nautilus/terraform-modules\`. Add the
+- [ ] Generate a read-only SSH deploy key for \`basilect/terraform-modules\`. Add the
   public key as a deploy key on the module repo. Add the private key as
   \`TF_MODULES_DEPLOY_KEY\` in the team's repo.
 - [ ] Pre-create the Blob Storage state container path:
@@ -2613,7 +2848,7 @@ pipeline before adding database or compute resources.
 
 ## Coordinating module upgrades across teams
 
-When releasing a \`nautilus-infra\` version that contains breaking changes:
+When releasing a \`basilect-infra\` version that contains breaking changes:
 
 1. **Announce** to all consuming teams at least two weeks before the release,
    with the migration guide attached.
@@ -2654,7 +2889,7 @@ every consuming repo. Use a script to open identical PRs:
 \`\`\`bash
 for repo in portal-infra myapp-infra billing-infra; do
   gh pr create \\
-    --repo nautilus/$repo \\
+    --repo basilect/$repo \\
     --title "chore: update infra pipeline to v2.1" \\
     --body "Platform team maintenance — no stack changes required." \\
     --base main \\
@@ -2665,7 +2900,7 @@ done
   "repository-setup": `# Repository Setup
 
 The \`setup/\` directory contains everything needed to configure a GitHub repository
-for use with Nautilus — branch protection, GitHub Environments, team permissions,
+for use with Basilect — branch protection, GitHub Environments, team permissions,
 labels, CODEOWNERS, issue templates, and PR templates. A single script and a
 \`workflow_dispatch\` workflow apply the full configuration from one command.
 
@@ -2770,10 +3005,10 @@ step and flags any errors.
 export GH_TOKEN=ghp_your_token_here
 
 # Dry run first — see what will happen without making changes
-bash setup/scripts/apply-repo-config.sh nautilus portal-infra setup/configs/product-team.json --dry-run
+bash setup/scripts/apply-repo-config.sh basilect portal-infra setup/configs/product-team.json --dry-run
 
 # Apply for real
-bash setup/scripts/apply-repo-config.sh nautilus portal-infra setup/configs/product-team.json
+bash setup/scripts/apply-repo-config.sh basilect portal-infra setup/configs/product-team.json
 \`\`\`
 
 ---
@@ -2785,7 +3020,7 @@ remaining secrets manually (these cannot be set via the setup script because
 they contain sensitive values):
 
 \`\`\`bash
-bash setup/scripts/apply-repo-config.sh nautilus portal-infra setup/configs/product-team.json
+bash setup/scripts/apply-repo-config.sh basilect portal-infra setup/configs/product-team.json
 \`\`\`
 
 After the script completes, add these secrets to the product team's repo manually:
@@ -2816,7 +3051,7 @@ Run the \`construct-library\` config, then add the \`REGISTRY_TOKEN\` secret sco
 to the \`registry\` environment (not at the repo level):
 
 \`\`\`bash
-bash setup/scripts/apply-repo-config.sh nautilus nautilus-infra-python setup/configs/construct-library.json
+bash setup/scripts/apply-repo-config.sh basilect basilect-infra-python setup/configs/construct-library.json
 \`\`\`
 
 Then in the repo: **Settings → Environments → registry → Add secret → \`REGISTRY_TOKEN\`**
@@ -2869,6 +3104,10 @@ The following require manual action or a separate provisioning step:
     gfm: true,
   });
 
+  var landingPage = document.getElementById("landing-page");
+  var requestAccessPage = document.getElementById("request-access-page");
+  var layoutEl = document.querySelector(".layout");
+
   function loadPage(page) {
     // Update sidebar active state
     sidebar.querySelectorAll("a").forEach(a => {
@@ -2877,13 +3116,39 @@ The following require manual action or a separate provisioning step:
 
     var demoSection = document.getElementById("demo-section");
 
+    // Hide all special pages by default
+    landingPage.classList.remove("visible");
+    requestAccessPage.classList.remove("visible");
+    layoutEl.style.display = "none";
+    demoSection.style.display = "none";
+    contentEl.style.display = "none";
+
+    // Handle landing page
+    if (page === "landing") {
+      landingPage.classList.add("visible");
+      window.scrollTo({ top: 0 });
+      document.title = "Basilect — Self-Service Azure IaC Platform";
+      return;
+    }
+
+    // Handle request access page
+    if (page === "request-access") {
+      requestAccessPage.classList.add("visible");
+      window.scrollTo({ top: 0 });
+      document.title = "Request Early Access — Basilect";
+      return;
+    }
+
+    // Show the docs layout for all other pages
+    layoutEl.style.display = "flex";
+
     // Handle "demo" as a special non-markdown page
     if (page === "demo") {
       contentEl.style.display = "none";
       demoSection.style.display = "block";
       initDemoSlider();
       window.scrollTo({ top: 0 });
-      document.title = "See it in action — Nautilus Docs";
+      document.title = "See it in action — Basilect Docs";
       sidebar.classList.remove("open");
       return;
     }
@@ -2913,8 +3178,8 @@ The following require manual action or a separate provisioning step:
 
     var h1 = contentEl.querySelector("h1");
     document.title = h1
-      ? h1.textContent + " — Nautilus Docs"
-      : "Nautilus Documentation";
+      ? h1.textContent + " — Basilect Docs"
+      : "Basilect Documentation";
 
     sidebar.classList.remove("open");
   }
@@ -2943,8 +3208,9 @@ The following require manual action or a separate provisioning step:
 
   // Handle hash changes
   function onHashChange() {
-    let page = window.location.hash.replace("#", "") || "home";
-    if (page !== "demo" && !PAGE_LIST.includes(page)) page = "home";
+    let page = window.location.hash.replace("#", "") || "landing";
+    if (page === "landing" || page === "request-access") { loadPage(page); return; }
+    if (page !== "demo" && !PAGE_LIST.includes(page)) page = "landing";
     loadPage(page);
   }
 
@@ -2959,8 +3225,8 @@ The following require manual action or a separate provisioning step:
       sub: "A product team developer installs the construct library and writes infrastructure as code in their language of choice. No HCL required.",
       file: "main.py",
       lang: "python",
-      code: `from nautilus_infra import BaseAzureStack
-from nautilus_infra.constructs import (
+      code: `from basilect_infra import BaseAzureStack
+from basilect_infra.constructs import (
     NetworkConstruct, DatabaseConstruct
 )
 
@@ -3005,16 +3271,16 @@ on:
 
 jobs:
   validate:
-    uses: nautilus/reusable-workflows/.github/workflows/tf-validate.yml@v1.4.0
+    uses: basilect/reusable-workflows/.github/workflows/tf-validate.yml@v1.4.0
 
   changes:
     if: github.event_name == 'pull_request'
-    uses: nautilus/reusable-workflows/.github/workflows/tf-changes.yml@v1.4.0
+    uses: basilect/reusable-workflows/.github/workflows/tf-changes.yml@v1.4.0
 
   plan:
     needs: [validate, changes]
     if: github.event_name == 'pull_request'
-    uses: nautilus/reusable-workflows/.github/workflows/tf-plan.yml@v1.4.0
+    uses: basilect/reusable-workflows/.github/workflows/tf-plan.yml@v1.4.0
     with:
       environments: \${{ needs.changes.outputs.affected }}`,
     },
@@ -3023,7 +3289,7 @@ jobs:
       sub: "Every terraform plan is evaluated against the full OPA policy suite. Public resources, unauthorized network changes, missing tags — all blocked before apply.",
       file: "policy/deny_public_resources.rego",
       lang: "text",
-      code: `package nautilus.deny
+      code: `package basilect.deny
 
 import rego.v1
 
@@ -3058,7 +3324,7 @@ deny contains msg if {
       sub: "The pipeline comments the full plan diff and policy results directly on the pull request. Reviewers see exactly what will change before approving.",
       file: "PR comment",
       lang: "text",
-      code: `🐚 Nautilus Plan — portal / dev
+      code: `Basilect Plan — portal / dev
 
 Terraform will perform the following actions:
 
@@ -3090,7 +3356,7 @@ OPA: ✓ All policies passed (6 rules evaluated)`,
       sub: "After approval, the PR is merged. The deploy pipeline applies changes environment by environment — dev and QA automatically, stage and prod with platform team approval.",
       file: "deploy pipeline",
       lang: "text",
-      code: `🐚 Nautilus Deploy — portal
+      code: `Basilect Deploy — portal
 
 ━━━ dev ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   ✓ terraform plan    6 to add
