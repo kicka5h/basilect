@@ -1,6 +1,6 @@
-# Nautilus Dashboard
+# basilect Dashboard
 
-The Nautilus Dashboard is a self-hosted Next.js application that gives platform and product teams visibility into the state of their infrastructure repos.
+The basilect Dashboard is a self-hosted Next.js application that gives platform and product teams visibility into the state of their infrastructure repos.
 
 ---
 
@@ -8,11 +8,11 @@ The Nautilus Dashboard is a self-hosted Next.js application that gives platform 
 
 | Page | Route | What it shows |
 |------|-------|---------------|
-| **Repository overview** | `/` | Card grid of all `nautilus-managed` repos with last deploy status, drift alerts, open PRs |
+| **Repository overview** | `/` | Card grid of all `basilect-managed` repos with last deploy status, drift alerts, open PRs |
 | **Environment health** | `/repos/[owner]/[repo]` | Per-environment (dev/qa/staging/prod) deploy status, drift status, recent workflow runs |
 | **Policy compliance** | `/compliance` | Aggregated OPA violations across repos, weekly trend chart, filter by repo |
 | **Module versions** | `/versions` | Matrix of repos × construct version, outdated flags, adoption percentage |
-| **Open PRs** | `/pulls` | All open PRs across Nautilus-managed repos with CI status |
+| **Open PRs** | `/pulls` | All open PRs across basilect-managed repos with CI status |
 | **Activity feed** | `/activity` | Timeline of deploys, drift events, and codegen PRs across all repos |
 | **Policies** | `/policies` | Policy catalog and recent violations |
 | **Settings** | `/settings` | User management — add/remove users, change roles (admin only) |
@@ -24,7 +24,7 @@ The Nautilus Dashboard is a self-hosted Next.js application that gives platform 
 ### Prerequisites
 
 - Node.js 18+
-- A GitHub App configured for Nautilus (see [GitHub App Setup](github-app-setup.md))
+- A GitHub App configured for basilect (see [GitHub App Setup](github-app-setup.md))
 - The App's **App ID**, **private key** (`.pem` file), and **Installation ID**
 
 ### 1. Install dependencies
@@ -53,7 +53,7 @@ The wizard walks through five steps:
 | **Create GitHub App** | Shows the required permissions and opens GitHub's App creation page (or skip if you already have one) |
 | **Enter credentials** | Paste the App ID, private key (.pem or base64), app slug, and optionally the Installation ID. You also name your **organization** — this is how the org appears in the dashboard |
 | **Install the App** | Install the App on your GitHub org and enter the Installation ID from the URL |
-| **Connect repositories** | Toggle which repos the dashboard should monitor (adds the `nautilus-managed` topic) |
+| **Connect repositories** | Toggle which repos the dashboard should monitor (adds the `basilect-managed` topic) |
 
 After completing setup:
 - A **Default** organization is created in the local SQLite database
@@ -111,7 +111,7 @@ curl -X POST http://localhost:3000/api/orgs \
 
 ### Switching organizations
 
-If a user belongs to multiple organizations, an **org switcher** dropdown appears in the nav bar next to the Nautilus logo. Click the org name to switch.
+If a user belongs to multiple organizations, an **org switcher** dropdown appears in the nav bar next to the basilect logo. Click the org name to switch.
 All dashboard data (repos, compliance, versions, etc.) is scoped to the currently selected organization.
 
 ---
@@ -153,10 +153,10 @@ Users can be removed or have their role changed from the same page.
 
 ## How it discovers repos
 
-Repos are discovered via the GitHub topic `nautilus-managed`. Add this topic to any repo you want the dashboard to monitor:
+Repos are discovered via the GitHub topic `basilect-managed`. Add this topic to any repo you want the dashboard to monitor:
 
 ```bash
-gh repo edit <owner>/<repo> --add-topic nautilus-managed
+gh repo edit <owner>/<repo> --add-topic basilect-managed
 ```
 
 The dashboard paginates through all repos accessible to the GitHub App installation — there is no 100-repo cap. Archived repos are automatically filtered out since they show stale data and reject upgrade PRs.
@@ -178,7 +178,7 @@ Browser → Next.js (Azure Static Web Apps)
             │   ├── orgs: GitHub App configs per organization
             │   └── org_users: email + role memberships
             │
-            └── API routes → GitHub API (via Nautilus GitHub App)
+            └── API routes → GitHub API (via basilect GitHub App)
                               │
                               ├── Search repos by topic
                               ├── Workflow runs → deploy status
@@ -188,16 +188,16 @@ Browser → Next.js (Azure Static Web Apps)
                               └── Open PRs per repo
 ```
 
-- **Database** — SQLite via `better-sqlite3`, stored at `.nautilus/nautilus.db`.
+- **Database** — SQLite via `better-sqlite3`, stored at `.basilect/basilect.db`.
   Holds organization configs and user memberships. Auto-created on first access
 - **Legacy migration** — if the DB is empty on startup but env vars or
-  `.nautilus/config.json` have a valid config, a "Default" org is auto-created
+  `.basilect/config.json` have a valid config, a "Default" org is auto-created
   with those credentials
 - **Caching** — server-side TTL cache (keyed by `orgId:` prefix) +
   `Cache-Control` headers + client-side SWR
 - **Auth** — NextAuth.js with Azure AD and/or GitHub OAuth. Optional — the
   dashboard works without auth providers (open access, first org used by default)
-- **Data source** — Nautilus GitHub App (not PAT) for higher rate limits
+- **Data source** — basilect GitHub App (not PAT) for higher rate limits
 - **Rate limiting** — `@octokit/plugin-throttling` automatically retries on
   429 responses (up to 2 retries on primary rate limits, 1 on secondary)
 - **Credential validation** — GitHub App credentials are validated via
@@ -213,7 +213,7 @@ Browser → Next.js (Azure Static Web Apps)
 cd dashboard/infra
 terraform init
 terraform apply \
-  -var="resource_group_name=nautilus-dashboard-rg" \
+  -var="resource_group_name=basilect-dashboard-rg" \
   -var="github_app_id=<app-id>" \
   -var="github_app_private_key=<base64-pem>" \
   -var="github_app_installation_id=<installation-id>" \
@@ -251,15 +251,15 @@ npm install
 npm run dev   # http://localhost:3000
 ```
 
-The setup wizard runs automatically on first access. You can also pre-configure via environment variables or `.nautilus/config.json`:
+The setup wizard runs automatically on first access. You can also pre-configure via environment variables or `.basilect/config.json`:
 
 ```json
 {
   "appId": "123456",
   "privateKey": "<base64-encoded-pem>",
   "installationId": "78901234",
-  "appSlug": "nautilus",
-  "appUrl": "https://github.com/apps/nautilus"
+  "appSlug": "basilect",
+  "appUrl": "https://github.com/apps/basilect"
 }
 ```
 
@@ -295,11 +295,11 @@ Org/user management routes require admin role.
 
 ## Custom domain
 
-To use a custom domain (e.g., `nautilus.example.com`):
+To use a custom domain (e.g., `basilect.example.com`):
 
 ```bash
 terraform apply \
-  -var="custom_domain=nautilus.example.com" \
+  -var="custom_domain=basilect.example.com" \
   -var="dns_zone_name=example.com" \
   -var="dns_zone_resource_group=dns-rg" \
   # ... other vars

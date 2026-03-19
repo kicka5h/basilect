@@ -1,6 +1,6 @@
 # Product Team Maintenance
 
-How the platform team supports product teams that run on Nautilus: reviewing
+How the platform team supports product teams that run on basilect: reviewing
 their PRs, managing state, handling incidents, onboarding new teams, and
 coordinating module upgrades.
 
@@ -398,7 +398,7 @@ Never leave drift unresolved across multiple apply cycles. It compounds.
 - [ ] Add the SP details as GitHub Actions secrets on the team's repo:
   `ARM_CLIENT_ID`, `ARM_SUBSCRIPTION_ID` (per env prefix), and the shared
   `ARM_TENANT_ID` repo variable.
-- [ ] Generate a read-only SSH deploy key for `nautilus/terraform-modules`. Add the
+- [ ] Generate a read-only SSH deploy key for `basilect/terraform-modules`. Add the
   public key as a deploy key on the module repo. Add the private key as
   `TF_MODULES_DEPLOY_KEY` in the team's repo.
 - [ ] Pre-create the Blob Storage state container path:
@@ -421,7 +421,7 @@ pipeline before adding database or compute resources.
 
 ## Coordinating module upgrades across teams
 
-When releasing a `nautilus-infra` version that contains breaking changes:
+When releasing a `basilect-infra` version that contains breaking changes:
 
 1. **Announce** to all consuming teams at least two weeks before the release,
    with the migration guide attached.
@@ -462,7 +462,7 @@ every consuming repo. Use a script to open identical PRs:
 ```bash
 for repo in portal-infra myapp-infra billing-infra; do
   gh pr create \
-    --repo nautilus/$repo \
+    --repo basilect/$repo \
     --title "chore: update infra pipeline to v2.1" \
     --body "Platform team maintenance — no stack changes required." \
     --base main \

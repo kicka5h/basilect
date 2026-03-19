@@ -1,6 +1,6 @@
 # Policy Configuration
 
-Nautilus enforces OPA policies on every `terraform plan` before apply. The
+basilect enforces OPA policies on every `terraform plan` before apply. The
 platform team defines the default enforcement scope (which environments each
 policy runs in). Product teams can **tighten** enforcement for their repos —
 extending policies to additional environments — but cannot loosen or disable
@@ -19,13 +19,13 @@ tf-plan.yml / tf-deploy.yml
   ├── terraform plan → tfplan.json
   ├── Merge policy data:
   │     policy/policy_defaults.json  (platform defaults)
-  │   + nautilus.yaml                (repo overrides, if present)
+  │   + basilect.yaml                (repo overrides, if present)
   │   + {"environment": "<env>"}    (current environment)
   │
   └── conftest test tfplan.json
         --policy policy/
         --data policy_defaults.json
-        --data nautilus.yaml
+        --data basilect.yaml
         --data env.json
               │
               ▼
@@ -71,7 +71,7 @@ View the full catalog with descriptions on the
 ## Customizing enforcement per repo
 
 To customize which environments enforce which policies, create a
-`nautilus.yaml` file in the root of your infrastructure repo.
+`basilect.yaml` file in the root of your infrastructure repo.
 
 ### Adding enforcement to more environments
 
@@ -79,7 +79,7 @@ The most common use case: a team wants a policy that normally only runs in
 prod to also run in staging.
 
 ```yaml
-# nautilus.yaml
+# basilect.yaml
 policy_config:
   overrides:
     # Enforce HA requirements in staging too (default: prod only)
@@ -124,7 +124,7 @@ policy_config:
 ## What you cannot override
 
 The following policies are **non-configurable** — they are enforced in their
-default environments regardless of `nautilus.yaml`:
+default environments regardless of `basilect.yaml`:
 
 - **No Public Resources** — always enforced everywhere
 - **No Network Modifications** — always enforced everywhere
@@ -137,7 +137,7 @@ default environments regardless of `nautilus.yaml`:
 - **No Dangerous Provisioners** — always enforced everywhere (blocks `null_resource`, `terraform_data`, `local-exec`, `remote-exec`)
 
 Attempting to reduce the environment scope of a non-configurable policy in
-`nautilus.yaml` has no effect — the platform defaults always win.
+`basilect.yaml` has no effect — the platform defaults always win.
 
 ---
 
@@ -155,7 +155,7 @@ environment names still get correct policy enforcement.
 | `development` | `dev` |
 
 Custom aliases can be added in `policy_defaults.json` under the
-`environment_aliases` key, or per-repo in `nautilus.yaml` under
+`environment_aliases` key, or per-repo in `basilect.yaml` under
 `layout.custom_env_aliases`.
 
 ---
@@ -173,7 +173,7 @@ terraform show -json tfplan > tfplan.json
 conftest test tfplan.json \
   --policy policy/ \
   --data policy/policy_defaults.json \
-  --data nautilus.yaml \
+  --data basilect.yaml \
   --data <(printf '{"environment":"dev","project":"myapp"}')
 ```
 
@@ -208,10 +208,10 @@ Platform engineers can add new policies by:
 ### Policy template
 
 ```rego
-package nautilus.deny_example_resource
+package basilect.deny_example_resource
 
 import future.keywords.in
-import data.nautilus.lib
+import data.basilect.lib
 
 deny[msg] {
   # Use lib.policy_active to respect overrides and environment aliases
@@ -235,10 +235,10 @@ deny[msg] {
 ### Test template
 
 ```rego
-package nautilus.deny_example_resource_test
+package basilect.deny_example_resource_test
 
 import future.keywords.in
-import data.nautilus.deny_example_resource
+import data.basilect.deny_example_resource
 
 test_deny_dangerous_setting_in_prod {
   msgs := deny_example_resource.deny with input as {"resource_changes": [{

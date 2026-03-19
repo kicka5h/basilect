@@ -1,6 +1,6 @@
 # Developer Interface Reference
 
-This document describes the interface Nautilus exposes to product teams. It covers
+This document describes the interface basilect exposes to product teams. It covers
 what they can build, what the platform enforces, and how to support them when
 things go wrong. Share this document with product teams during onboarding.
 
@@ -31,11 +31,11 @@ subnets and DNS zones automatically.
 
 | Language | Package | Registry |
 |----------|---------|---------|
-| Python | `nautilus-infra` | Internal PyPI |
-| TypeScript | `@nautilus/infra` | Internal npm |
-| C# | `Nautilus.Infra` | Internal NuGet |
-| Java | `com.nautilus:infra` | Internal Maven |
-| Go | `github.com/nautilus/infra-go` | Internal Go proxy |
+| Python | `basilect-infra` | Internal PyPI |
+| TypeScript | `@basilect/infra` | Internal npm |
+| C# | `basilect.Infra` | Internal NuGet |
+| Java | `com.basilect:infra` | Internal Maven |
+| Go | `github.com/basilect/infra-go` | Internal Go proxy |
 
 All five produce identical Terraform JSON. The synthesized output is what the
 pipeline operates on.
@@ -266,8 +266,8 @@ teams should always add at least one additional pool for application workloads.
 
 ```python
 import os
-from nautilus_infra import BaseAzureStack
-from nautilus_infra.constructs import (
+from basilect_infra import BaseAzureStack
+from basilect_infra.constructs import (
     DatabaseConstruct, AksConstruct,
     PostgresConfig, AksConfig, NodePoolConfig,
 )
@@ -367,9 +367,9 @@ needs (e.g. database FQDN, cluster ID).
 
 ---
 
-## Nautilus Dashboard
+## basilect Dashboard
 
-The Nautilus Dashboard at your organization's dashboard URL provides real-time
+The basilect Dashboard at your organization's dashboard URL provides real-time
 visibility into your infrastructure repos:
 
 - **Repository overview** — see deploy status, drift alerts, and open PRs across all repos (paginated, no 100-repo limit)
@@ -380,10 +380,10 @@ visibility into your infrastructure repos:
 
 Archived repos are automatically hidden from the dashboard.
 
-To have your repo appear on the dashboard, add the `nautilus-managed` topic:
+To have your repo appear on the dashboard, add the `basilect-managed` topic:
 
 ```bash
-gh repo edit <owner>/<repo> --add-topic nautilus-managed
+gh repo edit <owner>/<repo> --add-topic basilect-managed
 ```
 
 ---
@@ -391,7 +391,7 @@ gh repo edit <owner>/<repo> --add-topic nautilus-managed
 ## Repo layout configuration
 
 Teams with non-standard directory layouts can declare their structure in
-`nautilus.yaml` at the repo root:
+`basilect.yaml` at the repo root:
 
 ```yaml
 layout:

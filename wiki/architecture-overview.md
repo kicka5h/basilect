@@ -12,7 +12,7 @@
                            ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │  infra.yml  (thin calling workflow in each product repo)        │
-│  Delegates to nautilus/reusable-workflows:                         │
+│  Delegates to basilect/reusable-workflows:                         │
 │                                                                  │
 │  tf-validate  →  fmt-check + init -backend=false + validate     │
 │  tf-changes   →  detect which env folders changed (PR only)     │
@@ -26,7 +26,7 @@
                            │  module source via SSH deploy key
                            ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│  terraform-modules  (nautilus/terraform-modules — private)         │
+│  terraform-modules  (basilect/terraform-modules — private)         │
 │                                                                  │
 │  modules/networking          modules/database/postgres           │
 │  modules/compute/aks         governance/                        │
@@ -64,7 +64,7 @@
 | CI/CD pipeline template | | ✅ |
 | Construct libraries (auto-generated via codegen) | | ✅ |
 | Dashboard (repo health, compliance, versions) | | ✅ |
-| Nautilus GitHub App (bot identity) | | ✅ |
+| basilect GitHub App (bot identity) | | ✅ |
 | OPA/conftest policy rules (`policy/`) | | ✅ |
 | Azure Policy definitions and assignments | | ✅ |
 | Reusable GitHub Actions workflows | | ✅ |
@@ -123,7 +123,7 @@ GitHub Actions runner
 │
 └── TF_MODULES_DEPLOY_KEY  (SSH deploy key, read-only, per product repo)
     → loaded by webfactory/ssh-agent before `terraform init`
-    → allows Terraform to clone git::ssh://git@github.com/nautilus/terraform-modules.git
+    → allows Terraform to clone git::ssh://git@github.com/basilect/terraform-modules.git
 ```
 
 Each product team gets a service principal per environment with a federated
@@ -165,11 +165,11 @@ for how to release it.
 The construct libraries pin an explicit Git tag when sourcing each Terraform module:
 
 ```
-git::ssh://git@github.com/nautilus/terraform-modules.git//modules/networking?ref=v1.4.0
+git::ssh://git@github.com/basilect/terraform-modules.git//modules/networking?ref=v1.4.0
 ```
 
 The construct library package version and the module tag it references are always
-identical. Releasing `nautilus-infra==1.5.0` requires cutting `v1.5.0` in the module
+identical. Releasing `basilect-infra==1.5.0` requires cutting `v1.5.0` in the module
 repo first and updating the source strings in all five language libraries.
 
 Product teams upgrade by changing one line in their dependency file. The module
@@ -229,18 +229,18 @@ Platform engineer tags terraform-modules (e.g., v1.5.0)
         │
         │  repository_dispatch: module-release
         ▼
-codegen workflow  (project-nautilus)
+codegen workflow  (project-basilect)
   │
-  ├── Generate Nautilus App token
+  ├── Generate basilect App token
   ├── Clone terraform-modules at the tag (repo configurable via MODULES_REPO)
-  ├── Run nautilus-codegen:
+  ├── Run basilect-codegen:
   │     reads variables.tf + outputs.tf + module.json
   │     classifies variables (standard / platform / config / tags)
   │     handles nested types, tuples, heredocs, keyword conflicts
   │     annotates sensitive variables in generated code
   │     emits construct code for 5 languages
   │     (supports --manifest for multi-source module repos)
-  └── Open PR as nautilus[bot]
+  └── Open PR as basilect[bot]
         │
         │  PR triggers CI (because App token, not GITHUB_TOKEN)
         │  merge + tag → publish to package registries
@@ -258,7 +258,7 @@ Browser → Next.js (Azure Static Web Apps)
             ├── NextAuth.js  (Azure AD + GitHub OAuth)
             └── API routes   (server-side, cached)
                   │
-                  └── GitHub API via Nautilus App (with throttling plugin)
+                  └── GitHub API via basilect App (with throttling plugin)
                         ├── Paginated repo listing (handles >100 repos)
                         ├── Filter: archived repos excluded
                         ├── Workflow runs  → deploy status per environment

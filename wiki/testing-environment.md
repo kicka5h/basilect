@@ -1,6 +1,6 @@
-# Nautilus Test Environment
+# basilect Test Environment
 
-Provisions and tears down a full multi-cloud, multi-org test environment for Nautilus.
+Provisions and tears down a full multi-cloud, multi-org test environment for basilect.
 
 ## What it creates
 
@@ -12,7 +12,7 @@ Provisions and tears down a full multi-cloud, multi-org test environment for Nau
 | State | Storage Account (LRS) | GCS bucket | Spaces bucket |
 
 **GitHub** (2 orgs):
-- `k1cka5h`: project-nautilus, terraform-modules, portal-infra, billing-infra
+- `k1cka5h`: project-basilect, terraform-modules, portal-infra, billing-infra
 - `heyk1cka5h`: same repos, separate GitHub App
 
 **Estimated daily cost**: ~$14/day total (Azure ~$8, GCP ~$5, DO ~$1)

@@ -1,7 +1,7 @@
-# Nautilus GitHub App Setup
+# basilect GitHub App Setup
 
-The Nautilus GitHub App is the single identity behind all platform automation.
-Every automated commit, PR, and API call in the Nautilus system uses this App.
+The basilect GitHub App is the single identity behind all platform automation.
+Every automated commit, PR, and API call in the basilect system uses this App.
 
 ---
 
@@ -9,9 +9,9 @@ Every automated commit, PR, and API call in the Nautilus system uses this App.
 
 | Feature | How the App is used |
 |---------|-------------------|
-| **Codegen PRs** | When a Terraform module is tagged, the codegen workflow generates updated constructs and opens a PR as `nautilus[bot]` |
+| **Codegen PRs** | When a Terraform module is tagged, the codegen workflow generates updated constructs and opens a PR as `basilect[bot]` |
 | **Dashboard API** | The dashboard fetches repo, workflow, and PR data using the App's installation token (higher rate limits than PATs) |
-| **Wiki sync** | Wiki updates are committed and pushed as `nautilus[bot]` |
+| **Wiki sync** | Wiki updates are committed and pushed as `basilect[bot]` |
 | **CI triggering** | PRs opened by the App trigger CI checks (unlike `GITHUB_TOKEN`-opened PRs) |
 
 ---
@@ -34,8 +34,8 @@ set. Requires the `gh` CLI authenticated as an org owner.
 
 | Setting | Value |
 |---------|-------|
-| App name | `Nautilus` |
-| Homepage URL | `https://github.com/<org>/project-nautilus` |
+| App name | `basilect` |
+| Homepage URL | `https://github.com/<org>/project-basilect` |
 | Webhook | **Inactive** (uncheck "Active") |
 | Where can this be installed? | Only on this account |
 
@@ -63,7 +63,7 @@ set. Requires the `gh` CLI authenticated as an org owner.
 
 After creating the App, install it on the organization and grant access to:
 
-- `project-nautilus` (codegen, wiki sync)
+- `project-basilect` (codegen, wiki sync)
 - `terraform-modules` (codegen reads module source)
 - All product team repos the dashboard should monitor
 
@@ -77,15 +77,15 @@ installed App (the number at the end of the URL).
 Base64-encode the private key (avoids multiline secret issues):
 
 ```bash
-base64 < nautilus-app.pem | tr -d '\n'
+base64 < basilect-app.pem | tr -d '\n'
 ```
 
-Set secrets on the `project-nautilus` repository:
+Set secrets on the `project-basilect` repository:
 
 ```bash
 # Codegen workflow + wiki sync
-gh secret set NAUTILUS_APP_ID --body '<app-id>'
-gh secret set NAUTILUS_APP_PRIVATE_KEY --body '<base64-encoded-pem>'
+gh secret set basilect_APP_ID --body '<app-id>'
+gh secret set basilect_APP_PRIVATE_KEY --body '<base64-encoded-pem>'
 
 # Dashboard
 gh secret set GH_APP_ID --body '<app-id>'
@@ -117,7 +117,7 @@ gh api /app --jq '.name' \
 ```
 
 If you don't have Ruby/JWT available, the easiest check is to trigger the
-codegen workflow manually and verify the PR appears as `nautilus[bot]`.
+codegen workflow manually and verify the PR appears as `basilect[bot]`.
 
 ---
 
@@ -125,7 +125,7 @@ codegen workflow manually and verify the PR appears as `nautilus[bot]`.
 
 1. Go to the App settings page
 2. Click **Generate a private key** (this creates a new key without revoking the old one)
-3. Update the `NAUTILUS_APP_PRIVATE_KEY` and `GH_APP_PRIVATE_KEY` secrets
+3. Update the `basilect_APP_PRIVATE_KEY` and `GH_APP_PRIVATE_KEY` secrets
 4. Verify the codegen and dashboard still work
 5. Revoke the old key from the App settings page
 
@@ -136,5 +136,5 @@ codegen workflow manually and verify the PR appears as `nautilus[bot]`.
 - The private key is the only credential — protect it like a production secret
 - The App has **read-only** access to contents and **write** access only to PRs and workflows
 - Installation scope is limited to selected repositories, not the entire org
-- All actions by the App appear in the GitHub audit log under `nautilus[bot]`
+- All actions by the App appear in the GitHub audit log under `basilect[bot]`
 - Rotate the private key annually or immediately on suspected compromise

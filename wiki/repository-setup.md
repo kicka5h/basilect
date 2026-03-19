@@ -1,7 +1,7 @@
 # Repository Setup
 
 The `setup/` directory contains everything needed to configure a GitHub repository
-for use with Nautilus — branch protection, GitHub Environments, team permissions,
+for use with basilect — branch protection, GitHub Environments, team permissions,
 labels, CODEOWNERS, issue templates, and PR templates. A single script and a
 `workflow_dispatch` workflow apply the full configuration from one command.
 
@@ -106,10 +106,10 @@ step and flags any errors.
 export GH_TOKEN=ghp_your_token_here
 
 # Dry run first — see what will happen without making changes
-bash setup/scripts/apply-repo-config.sh nautilus portal-infra setup/configs/product-team.json --dry-run
+bash setup/scripts/apply-repo-config.sh basilect portal-infra setup/configs/product-team.json --dry-run
 
 # Apply for real
-bash setup/scripts/apply-repo-config.sh nautilus portal-infra setup/configs/product-team.json
+bash setup/scripts/apply-repo-config.sh basilect portal-infra setup/configs/product-team.json
 ```
 
 ---
@@ -121,7 +121,7 @@ remaining secrets manually (these cannot be set via the setup script because
 they contain sensitive values):
 
 ```bash
-bash setup/scripts/apply-repo-config.sh nautilus portal-infra setup/configs/product-team.json
+bash setup/scripts/apply-repo-config.sh basilect portal-infra setup/configs/product-team.json
 ```
 
 After the script completes, add these secrets to the product team's repo manually:
@@ -152,7 +152,7 @@ Run the `construct-library` config, then add the `REGISTRY_TOKEN` secret scoped
 to the `registry` environment (not at the repo level):
 
 ```bash
-bash setup/scripts/apply-repo-config.sh nautilus nautilus-infra-python setup/configs/construct-library.json
+bash setup/scripts/apply-repo-config.sh basilect basilect-infra-python setup/configs/construct-library.json
 ```
 
 Then in the repo: **Settings → Environments → registry → Add secret → `REGISTRY_TOKEN`**

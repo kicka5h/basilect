@@ -1,7 +1,7 @@
-# Nautilus — Platform Team Wiki
+# basilect — Platform Team Wiki
 
 This wiki is the operational reference for platform engineers who build and run
-Nautilus. It covers the full system: Terraform modules, construct libraries,
+basilect. It covers the full system: Terraform modules, construct libraries,
 CI/CD pipelines, OPA policies, state backend, and product team support.
 
 If you are a product team developer, see the
@@ -17,11 +17,11 @@ team maintains and shares with product teams.
 | Understand how the whole system fits together | [Architecture Overview](architecture-overview.md) |
 | Provision Azure prerequisites and OIDC service principals | [Bootstrap](bootstrap.md) |
 | Set up a new GitHub repo with branch protection, environments, and templates | [Repository Setup](repository-setup.md) |
-| Set up the Nautilus GitHub App | [GitHub App Setup](github-app-setup.md) |
+| Set up the basilect GitHub App | [GitHub App Setup](github-app-setup.md) |
 | Add, change, or release a Terraform module or construct | [Module Maintenance](platform-module-maintenance.md) |
 | Review a product team's PR, handle an incident, or onboard a new team | [Product Team Maintenance](platform-product-maintenance.md) |
 | Customize which policies run in which environments | [Policy Configuration](policy-configuration.md) |
-| Use the Nautilus Dashboard | [Dashboard Guide](dashboard-guide.md) |
+| Use the basilect Dashboard | [Dashboard Guide](dashboard-guide.md) |
 | Spin up or tear down a multi-cloud test environment | [Testing Environment](testing-environment.md) |
 | Know what the developer API looks like | [Developer Interface Reference](developer-guide.md) |
 
@@ -30,7 +30,7 @@ team maintains and shares with product teams.
 ## Repository map
 
 ```
-project-nautilus/
+project-basilect/
 │
 ├── tf-modules/                     Private Terraform module library
 │   ├── modules/
@@ -58,7 +58,7 @@ project-nautilus/
 │   ├── src/                        CLI: reads TF modules → emits 5 languages
 │   └── modules/                    Module definitions (variables.tf + module.json)
 │
-├── dashboard/                      Nautilus Dashboard (Next.js on Azure SWA)
+├── dashboard/                      basilect Dashboard (Next.js on Azure SWA)
 │   ├── src/                        Pages, API routes, components
 │   └── infra/                      Terraform: SWA + Entra ID
 │
@@ -102,7 +102,7 @@ project-nautilus/
 | Construct libraries | Auto-generated via codegen; publish to internal registries |
 | Code generator | Reads TF module schemas → emits constructs in 5 languages; supports multi-source manifests |
 | Dashboard | Repo health, compliance, version tracking, open PRs; paginated, rate-limited, with forked-construct detection |
-| Nautilus GitHub App | Bot identity for all automated actions |
+| basilect GitHub App | Bot identity for all automated actions |
 | Reusable workflows | Pipeline template; push updates to every product repo |
 | OPA policies | Add rules; triage policy violations with product teams |
 | Azure Policy | Definitions + assignments across all subscriptions |

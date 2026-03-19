@@ -2,7 +2,7 @@
 
 The `bootstrap/` directory contains Terraform that provisions the Azure and Azure
 AD resources the platform depends on before any product team infrastructure can
-be deployed. Run these once when first implementing Nautilus, then once per new
+be deployed. Run these once when first implementing basilect, then once per new
 product team during onboarding.
 
 ```
@@ -21,7 +21,7 @@ Before running bootstrap you need:
   - Owner on the platform subscription (to create RBAC assignments)
   - Global Administrator or Application Administrator in Azure AD (to create applications and service principals)
 - **Terraform ≥ 1.7** installed locally
-- The `github_org` and `github_repo` for the Nautilus platform repo
+- The `github_org` and `github_repo` for the basilect platform repo
 
 ---
 
@@ -37,8 +37,8 @@ Run this once to create the shared Azure infrastructure the entire platform depe
 | `azurerm_storage_account` | Terraform state backend (`platformtfstate`) |
 | `azurerm_storage_container` | `tfstate` container within the account |
 | `azurerm_management_lock` | Protects the state account from accidental deletion |
-| `azuread_application` + SP | Platform service principal (`nautilus-platform`) |
-| `azuread_application_federated_identity_credential` | OIDC credential scoped to the Nautilus repo's main branch |
+| `azuread_application` + SP | Platform service principal (`basilect-platform`) |
+| `azuread_application_federated_identity_credential` | OIDC credential scoped to the basilect repo's main branch |
 | `azurerm_role_assignment` × 2 | Contributor on platform subscription; Storage Blob Data Contributor on state account |
 
 ### Apply
@@ -56,14 +56,14 @@ terraform init
 # Review the plan
 terraform plan \
   -var="platform_subscription_id=<platform-subscription-id>" \
-  -var="github_org=nautilus" \
-  -var="github_repo=project-nautilus"
+  -var="github_org=basilect" \
+  -var="github_repo=project-basilect"
 
 # Apply
 terraform apply \
   -var="platform_subscription_id=<platform-subscription-id>" \
-  -var="github_org=nautilus" \
-  -var="github_repo=project-nautilus"
+  -var="github_org=basilect" \
+  -var="github_repo=project-basilect"
 ```
 
 ### Read the outputs
@@ -76,7 +76,7 @@ terraform output state_storage_account_id   # needed for product-team bootstrap
 terraform output tenant_id                  # AZURE_TENANT_ID variable
 ```
 
-Set the GitHub Actions secrets and variables on the Nautilus repo as instructed.
+Set the GitHub Actions secrets and variables on the basilect repo as instructed.
 
 ### Optional: migrate local state to the remote backend
 
@@ -124,7 +124,7 @@ terraform init \
 
 terraform plan \
   -var="product_name=portal" \
-  -var="github_org=nautilus" \
+  -var="github_org=basilect" \
   -var="github_repo=portal-infra" \
   -var='subscription_ids={"dev":"<dev-sub-id>","qa":"<qa-sub-id>","stage":"<stage-sub-id>","prod":"<prod-sub-id>"}' \
   -var="state_storage_account_id=<state_storage_account_id from platform output>" \
@@ -156,17 +156,17 @@ Set them via `gh secret set` or the GitHub UI:
 ```bash
 # SSH deploy key for terraform-modules
 gh secret set TF_MODULES_DEPLOY_KEY \
-  --repo nautilus/portal-infra \
+  --repo basilect/portal-infra \
   --body "$(cat /path/to/tf_modules_key)"
 
 # PostgreSQL admin password
 gh secret set DB_ADMIN_PASSWORD \
-  --repo nautilus/portal-infra \
+  --repo basilect/portal-infra \
   --body "$(openssl rand -base64 32)"
 
 # Log Analytics workspace resource ID
 gh secret set LOG_WORKSPACE_ID \
-  --repo nautilus/portal-infra \
+  --repo basilect/portal-infra \
   --body "/subscriptions/.../workspaces/platform-logs"
 ```
 

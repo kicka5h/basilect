@@ -1,7 +1,7 @@
 # Module Maintenance
 
-How the platform team manages `nautilus/terraform-modules` — the private Terraform
-module library that backs every Nautilus construct.
+How the platform team manages `basilect/terraform-modules` — the private Terraform
+module library that backs every basilect construct.
 
 ---
 
@@ -188,7 +188,7 @@ resource "azurerm_management_lock" "this" {
   name       = "${local.name_prefix}-lock"
   scope      = azurerm_<resource>.this.id
   lock_level = "CanNotDelete"
-  notes      = "Managed by Nautilus. Remove via supervised decommission only."
+  notes      = "Managed by basilect. Remove via supervised decommission only."
 }
 ```
 
@@ -233,7 +233,7 @@ code generator how to map the Terraform module to a construct:
   "moduleId": "my-resource",
   "modulePath": "modules/category/my-resource",
   "moduleRef": "v1.5.0",
-  "repoUrl": "git::ssh://git@github.com/nautilus/terraform-modules.git",
+  "repoUrl": "git::ssh://git@github.com/basilect/terraform-modules.git",
   "platformInputs": {
     "subnet_id": "subnetIds.my-resource"
   },
@@ -266,7 +266,7 @@ npx tsx src/cli.ts generate \
   --output-dir ../constructs/cdktf
 ```
 
-Or trigger the codegen workflow, which opens a PR as `nautilus[bot]`:
+Or trigger the codegen workflow, which opens a PR as `basilect[bot]`:
 
 ```bash
 gh workflow run codegen.yml -f module_ref=v1.5.0
@@ -304,8 +304,8 @@ The manifest file maps module IDs to repo URLs:
 ```json
 {
   "modules": {
-    "networking": { "repo": "git@github.com:nautilus/terraform-modules.git", "ref": "v1.5.0", "path": "modules" },
-    "database":   { "repo": "git@github.com:nautilus/data-modules.git", "ref": "v2.0.0", "path": "modules/database" }
+    "networking": { "repo": "git@github.com:basilect/terraform-modules.git", "ref": "v1.5.0", "path": "modules" },
+    "database":   { "repo": "git@github.com:basilect/data-modules.git", "ref": "v2.0.0", "path": "modules/database" }
   }
 }
 ```
@@ -387,7 +387,7 @@ is wired correctly. Run them when changing module variable or output names.
 ```bash
 cd constructs/python && pip install -e ".[dev]" && pytest tests/ -v
 cd constructs/typescript && npm install && npm test
-cd constructs/csharp && dotnet test Nautilus.Infra.Tests/
+cd constructs/csharp && dotnet test basilect.Infra.Tests/
 cd constructs/java && mvn test --batch-mode
 cd constructs/go && go test ./...
 ```
@@ -418,7 +418,7 @@ Construct library package versions always match the module tag they reference.
 - [ ] `module.json` `moduleRef` updated to the new tag
 - [ ] For breaking changes: migration guide written and distributed to all consuming teams
 - [ ] For breaking changes: two-week notice period elapsed
-- [ ] Tag pushed → codegen PR opened automatically as `nautilus[bot]`
+- [ ] Tag pushed → codegen PR opened automatically as `basilect[bot]`
 - [ ] Codegen PR reviewed, CI passes, merged
 - [ ] All five packages published to their respective internal registries (automated — see below)
 
@@ -435,13 +435,13 @@ Use signed tags (`-s`). The CI `tag-check` job validates the semver format.
 ### Updating constructs (automated)
 
 When you push a new tag, the `terraform-modules` repo dispatches a
-`module-release` event to `project-nautilus`. The codegen workflow:
+`module-release` event to `project-basilect`. The codegen workflow:
 
 1. Clones the modules repo at the new tag (configurable via the `MODULES_REPO`
-   repository variable; defaults to `nautilus/terraform-modules`)
+   repository variable; defaults to `basilect/terraform-modules`)
 2. Reads `variables.tf`, `outputs.tf`, and `module.json` for each module
 3. Generates updated construct code for all five languages
-4. Opens a PR as `nautilus[bot]` with the changes
+4. Opens a PR as `basilect[bot]` with the changes
 
 If a `--manifest` input is provided to the workflow dispatch, the codegen uses
 multi-source mode instead of `--modules-dir`.
@@ -457,7 +457,7 @@ git tag -s v1.5.0 -m "Release v1.5.0"
 git push origin main v1.5.0
 ```
 
-The codegen PR triggers CI automatically (because it's opened by the Nautilus
+The codegen PR triggers CI automatically (because it's opened by the basilect
 App, not by `GITHUB_TOKEN`). Review, merge, and publish.
 
 ### Automated registry publishing
@@ -473,11 +473,11 @@ uploaded.
 
 | Language | Registry | Publish mechanism | Secret |
 |----------|---------|-------------------|--------|
-| Python | Internal PyPI (`pkgs.nautilus.internal`) | `twine upload` with `__token__` auth | `REGISTRY_TOKEN` |
-| TypeScript | Internal npm (`npm.nautilus.internal`) | `npm publish` via `NODE_AUTH_TOKEN` | `REGISTRY_TOKEN` |
-| Java | Internal Maven (`maven.nautilus.internal`) | `mvn deploy` with server credentials | `REGISTRY_TOKEN` |
-| C# | Internal NuGet (`nuget.nautilus.internal`) | `dotnet nuget push` with API key | `REGISTRY_TOKEN` |
-| Go | Internal Go proxy (`goproxy.nautilus.internal`) | Proxy cache warmed via HTTP request | `REGISTRY_TOKEN` |
+| Python | Internal PyPI (`pkgs.basilect.internal`) | `twine upload` with `__token__` auth | `REGISTRY_TOKEN` |
+| TypeScript | Internal npm (`npm.basilect.internal`) | `npm publish` via `NODE_AUTH_TOKEN` | `REGISTRY_TOKEN` |
+| Java | Internal Maven (`maven.basilect.internal`) | `mvn deploy` with server credentials | `REGISTRY_TOKEN` |
+| C# | Internal NuGet (`nuget.basilect.internal`) | `dotnet nuget push` with API key | `REGISTRY_TOKEN` |
+| Go | Internal Go proxy (`goproxy.basilect.internal`) | Proxy cache warmed via HTTP request | `REGISTRY_TOKEN` |
 
 Go is different from the other four: Go modules are versioned by git tag, not a
 package manifest. The publish job warms the internal Athens proxy cache by
@@ -500,7 +500,7 @@ ensures it is only accessible to the publish job and only after a reviewer appro
 
 ## Access control
 
-The `nautilus/terraform-modules` repo is private.
+The `basilect/terraform-modules` repo is private.
 
 | GitHub team | Access |
 |-------------|--------|
@@ -514,7 +514,7 @@ Each product repo has its own deploy key — keys are not shared across repos.
 
 ```bash
 # Generate a key pair (no passphrase)
-ssh-keygen -t ed25519 -C "github-actions@nautilus/<product>-infra" -f /tmp/tf_modules_key
+ssh-keygen -t ed25519 -C "github-actions@basilect/<product>-infra" -f /tmp/tf_modules_key
 
 # Add public key as a read-only deploy key on the terraform-modules repo:
 #   Settings → Deploy keys → Add deploy key → Allow write access: NO
@@ -529,11 +529,11 @@ Rotate deploy keys annually and immediately on suspected compromise.
 
 ## Releasing reusable workflows
 
-The `nautilus/reusable-workflows` repo is versioned independently from the Terraform
+The `basilect/reusable-workflows` repo is versioned independently from the Terraform
 modules. Calling workflows (`infra.yml`) pin a specific tag:
 
 ```yaml
-uses: nautilus/reusable-workflows/.github/workflows/tf-plan.yml@v1.0.0
+uses: basilect/reusable-workflows/.github/workflows/tf-plan.yml@v1.0.0
 ```
 
 ### When to cut a new release
@@ -606,7 +606,7 @@ if `data.environment` is `"production"`, the library resolves it to `"prod"`
 before comparing against the policy's environment list. Default aliases
 (`production` -> `prod`, `uat` -> `staging`, `test` -> `dev`, `development`
 -> `dev`) are built in and can be extended via `data.environment_aliases` in
-`policy_defaults.json` or `nautilus.yaml`.
+`policy_defaults.json` or `basilect.yaml`.
 
 **Testing a policy change locally:**
 
