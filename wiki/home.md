@@ -22,6 +22,7 @@ team maintains and shares with product teams.
 | Review a product team's PR, handle an incident, or onboard a new team | [Product Team Maintenance](platform-product-maintenance.md) |
 | Customize which policies run in which environments | [Policy Configuration](policy-configuration.md) |
 | Use the Nautilus Dashboard | [Dashboard Guide](dashboard-guide.md) |
+| Spin up or tear down a multi-cloud test environment | [Testing Environment](testing-environment.md) |
 | Know what the developer API looks like | [Developer Interface Reference](developer-guide.md) |
 
 ---
@@ -78,6 +79,15 @@ project-nautilus/
 │   └── .github/workflows/infra.yml Thin calling workflow
 │
 ├── examples/                       Consumer stacks in all five languages
+│
+├── testing/                        Multi-cloud test environment (setup + teardown)
+│   ├── setup.sh                    Main orchestration — provisions everything
+│   ├── teardown.sh                 Main teardown — destroys everything
+│   ├── config.env                  Template config (committed)
+│   ├── github/                     Create/delete repos per org
+│   ├── azure/                      VNet + AKS + PostgreSQL + state
+│   ├── gcp/                        VPC + GKE Autopilot + Cloud SQL + GCS
+│   └── digitalocean/               VPC + DOKS + Managed PG + Spaces
 │
 └── wiki/                           This documentation
 ```

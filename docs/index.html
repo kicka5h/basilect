@@ -668,6 +668,7 @@
     </div>
     <a href="#platform-module-maintenance" data-page="platform-module-maintenance">Module maintenance</a>
     <a href="#platform-product-maintenance" data-page="platform-product-maintenance">Product team support</a>
+    <a href="#testing-environment" data-page="testing-environment">Testing environment</a>
   </aside>
 
   <!-- ── Content ── -->
@@ -991,7 +992,7 @@ Run the interactive setup wizard — it handles repo creation, branch protection
 bash <(curl -fsSL https://raw.githubusercontent.com/basilect/basilect/main/setup/basilect.sh)
 \`\`\`
 
-**Prerequisites:** \\\`gh\\\` CLI, \\\`jq\\\`, \\\`git\\\`. Terraform is optional (needed for Azure bootstrap).
+**Prerequisites:** \`gh\` CLI, \`jq\`, \`git\`. Terraform is optional (needed for Azure bootstrap).
 
 ---
 
@@ -1004,28 +1005,28 @@ Before implementing Basilect, your organization needs:
 
 **Azure**
 - An Azure subscription per environment (dev, staging, prod) per product team, or a shared subscription with separate resource groups
-- A dedicated storage account (\\\`platformtfstate\\\`) for Terraform state, with a container per product team
+- A dedicated storage account (\`platformtfstate\`) for Terraform state, with a container per product team
 - Management group or subscription-level access to assign Azure Policy
 
 **Internal package registries**
 - One registry per construct language (PyPI, npm, NuGet, Maven, Go proxy), or a single Artifactory/Nexus instance with virtual repos for each ecosystem
 
 **Tooling (platform team machines)**
-- Terraform ≥ 1.7 (for \\\`mock_provider\\\` in \\\`.tftest.hcl\\\` tests)
+- Terraform ≥ 1.7 (for \`mock_provider\` in \`.tftest.hcl\` tests)
 - OPA / conftest CLI (for running policy tests locally)
-- Azure CLI (\\\`az\\\`)
+- Azure CLI (\`az\`)
 
 ---
 
 ## Key design decisions
 
-**OPA policies run before apply, Azure Policy runs after.** The \\\`policy/\\\` directory holds conftest rules that gate \\\`terraform plan\\\` output inside the CI pipeline. Azure Policy is a backstop for out-of-band changes. Both layers are intentional.
+**OPA policies run before apply, Azure Policy runs after.** The \`policy/\` directory holds conftest rules that gate \`terraform plan\` output inside the CI pipeline. Azure Policy is a backstop for out-of-band changes. Both layers are intentional.
 
-**Management locks prevent accidental deletion.** All non-dev resources carry a \\\`CanNotDelete\\\` lock. The deletion OPA policy and the lock together mean that removing a staging or prod resource requires two deliberate acts: a lock removal by the platform team and a policy-compliant plan merge.
+**Management locks prevent accidental deletion.** All non-dev resources carry a \`CanNotDelete\` lock. The deletion OPA policy and the lock together mean that removing a staging or prod resource requires two deliberate acts: a lock removal by the platform team and a policy-compliant plan merge.
 
-**No static credentials anywhere.** All Azure authentication uses OIDC workload identity federation. The GitHub Actions \\\`id-token: write\\\` permission is set on every workflow that talks to Azure.
+**No static credentials anywhere.** All Azure authentication uses OIDC workload identity federation. The GitHub Actions \`id-token: write\` permission is set on every workflow that talks to Azure.
 
-**Construct version = module version.** The construct libraries pin a specific \\\`?ref=\\\` tag on the module source URL. A construct library release and a module tag are always cut together, so the mapping is always unambiguous.
+**Construct version = module version.** The construct libraries pin a specific \`?ref=\` tag on the module source URL. A construct library release and a module tag are always cut together, so the mapping is always unambiguous.
 
 ---
 
@@ -1033,14 +1034,14 @@ Before implementing Basilect, your organization needs:
 
 | Area | Details |
 |------|---------|
-| Terraform modules (\\\`tf-modules/\\\`) | All changes, versioning, and breaking-change coordination |
-| Construct libraries (\\\`constructs/\\\`) | Publishing new versions; coordinating upgrades across product teams |
-| Reusable workflows (\\\`reusable-workflows/\\\`) | Pipeline template; pushing updates to every consuming repo |
-| OPA policies (\\\`policy/\\\`) | Adding rules; reviewing violations with product teams |
-| Azure Policy (\\\`tf-modules/governance/\\\`) | Definitions and assignments across all subscriptions |
+| Terraform modules (\`tf-modules/\`) | All changes, versioning, and breaking-change coordination |
+| Construct libraries (\`constructs/\`) | Publishing new versions; coordinating upgrades across product teams |
+| Reusable workflows (\`reusable-workflows/\`) | Pipeline template; pushing updates to every consuming repo |
+| OPA policies (\`policy/\`) | Adding rules; reviewing violations with product teams |
+| Azure Policy (\`tf-modules/governance/\`) | Definitions and assignments across all subscriptions |
 | State backend | Storage account, RBAC, and lock management |
 | Service principals | One per product team per environment; OIDC federated credentials |
-| Module SSH deploy keys | Read-only deploy keys on \\\`terraform-modules\\\`; one per product repo |
+| Module SSH deploy keys | Read-only deploy keys on \`terraform-modules\`; one per product repo |
 | Incident response | Failed applies, state corruption, unexpected drift |
 | Production approval gate | Required reviewer on GitHub Environments |
 
@@ -1054,7 +1055,7 @@ Before implementing Basilect, your organization needs:
 | [Azure bootstrap](#bootstrap) | Provisioning service principals and state backend |
 | [Repository setup](#repository-setup) | Configuring repos with branch protection, environments, and templates |
 | [Developer guide](#developer-guide) | Product team developers writing CDKTF stacks |
-| [Module maintenance](#platform-module-maintenance) | Platform engineers maintaining \\\`tf-modules/\\\` |
+| [Module maintenance](#platform-module-maintenance) | Platform engineers maintaining \`tf-modules/\` |
 | [Product team support](#platform-product-maintenance) | Platform engineers supporting product teams and handling incidents |
 `,
   "architecture-overview": `# Architecture Overview
@@ -3085,6 +3086,117 @@ The following require manual action or a separate provisioning step:
 - **OIDC federated credentials on service principals** — set via \`az ad app federated-credential create\`
 - **Azure RBAC assignments** — handled by the platform team's Azure provisioning steps
 - **SSH deploy key generation** — see [Module Maintenance — Access control](#platform-module-maintenance)
+`,
+  "testing-environment": `# Nautilus Test Environment
+
+Provisions and tears down a full multi-cloud, multi-org test environment for Nautilus.
+
+## What it creates
+
+| Layer | Azure | GCP | Digital Ocean |
+|-------|-------|-----|---------------|
+| Network | VNet + subnets + NSGs | VPC + subnets + firewall | VPC |
+| Compute | AKS (1-node B2s) | GKE Autopilot | DOKS (1-node s-2vcpu-2gb) |
+| Database | PostgreSQL Flexible (B1ms) | Cloud SQL (f1-micro) | Managed PG (1vcpu-1gb) |
+| State | Storage Account (LRS) | GCS bucket | Spaces bucket |
+
+**GitHub** (2 orgs):
+- \`k1cka5h\`: project-nautilus, terraform-modules, portal-infra, billing-infra
+- \`heyk1cka5h\`: same repos, separate GitHub App
+
+**Estimated daily cost**: ~$14/day total (Azure ~$8, GCP ~$5, DO ~$1)
+
+## Quick start
+
+\`\`\`bash
+# 1. Configure
+cp testing/config.env testing/config.local.env
+# Edit config.local.env with your subscription IDs, project IDs, tokens
+
+# 2. Setup everything
+bash testing/setup.sh
+
+# Or setup individual components:
+bash testing/setup.sh github          # just GitHub repos
+bash testing/setup.sh azure           # just Azure infra
+bash testing/setup.sh gcp             # just GCP infra
+bash testing/setup.sh digitalocean    # just DO infra
+bash testing/setup.sh dashboard       # just dashboard config
+\`\`\`
+
+## Teardown
+
+\`\`\`bash
+# Dry run (shows what would be destroyed)
+bash testing/teardown.sh
+
+# Actually destroy everything
+bash testing/teardown.sh --confirm
+
+# Destroy specific components
+bash testing/teardown.sh azure --confirm
+bash testing/teardown.sh gcp digitalocean --confirm
+bash testing/teardown.sh github --confirm
+\`\`\`
+
+## Prerequisites
+
+| Tool | Required for | Install |
+|------|-------------|---------|
+| \`terraform\` >= 1.5 | All clouds | [terraform.io](https://terraform.io) |
+| \`gh\` CLI | GitHub setup | \`brew install gh\` |
+| \`jq\` | Everything | \`brew install jq\` |
+| \`az\` CLI | Azure | \`brew install azure-cli\` |
+| \`gcloud\` CLI | GCP | [cloud.google.com/sdk](https://cloud.google.com/sdk) |
+| \`doctl\` CLI | DO (optional) | \`brew install doctl\` |
+
+## GitHub multi-account auth
+
+The setup requires switching between two GitHub accounts. Use \`gh auth login\`
+before each org setup step — the script pauses and prompts you.
+
+\`\`\`bash
+# For kicka5h / k1cka5h
+gh auth login --hostname github.com
+
+# For heykicka5h / heyk1cka5h
+gh auth login --hostname github.com
+\`\`\`
+
+## File structure
+
+\`\`\`text
+testing/
+├── setup.sh                 # Main orchestration — provisions everything
+├── teardown.sh              # Main teardown — destroys everything
+├── config.env               # Template config (committed)
+├── config.local.env         # Your config with secrets (gitignored)
+├── .gitignore
+├── github/
+│   ├── setup-org.sh         # Create repos, apply config per org
+│   └── teardown-org.sh      # Delete repos per org
+├── azure/
+│   ├── main.tf              # VNet + AKS + PostgreSQL + state (uses existing tf-modules)
+│   ├── variables.tf
+│   └── terraform.tfvars.example
+├── gcp/
+│   ├── main.tf              # VPC + GKE Autopilot + Cloud SQL + GCS
+│   ├── variables.tf
+│   └── terraform.tfvars.example
+└── digitalocean/
+    ├── main.tf              # VPC + DOKS + Managed PG + Spaces
+    ├── variables.tf
+    └── terraform.tfvars.example
+\`\`\`
+
+## Notes
+
+- All cloud resources use the cheapest available SKUs with no HA
+- \`force_destroy\` / \`deletion_protection = false\` is set on all stateful resources
+- Azure reuses existing \`tf-modules/\` for full parity with production module structure
+- GCP uses Autopilot GKE (cheapest — pay per pod, not per node)
+- DO Kubernetes uses a single \`s-2vcpu-2gb\` node ($12/mo)
+- GitHub Apps must be deleted manually via org settings (API doesn't support it)
 `
   };
 
